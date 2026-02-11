@@ -15,13 +15,16 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/vue-table": "^8.21.3",
     "clsx": "^2.1.1",
+    "date-fns": "^2.30.0",
     "lucide-vue-next": "^0.563.0",
     "pinia": "^3.0.4",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
+    "v-calendar": "^3.1.2",
     "vue": "^3.5.27",
     "vue-router": "^5.0.1"
   },

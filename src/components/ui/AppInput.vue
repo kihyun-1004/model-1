@@ -57,7 +57,7 @@ function handleInput(event: Event) {
           'w-full bg-white py-2 dark:bg-slate-900',
           'text-slate-900 dark:text-white',
           'border border-slate-300 dark:border-slate-700',
-          'focus:border-primary focus:ring-primary focus:ring-1',
+          'focus:border-primary focus:ring-primary focus:ring-1 focus-visible:outline-none',
           'rounded-lg text-sm shadow-xs transition-all',
           'disabled:cursor-not-allowed disabled:opacity-50',
           hasIcon ? 'pl-9' : 'pl-4',

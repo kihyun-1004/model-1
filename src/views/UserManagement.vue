@@ -9,7 +9,6 @@ import {
   Trash2,
   Download,
   ArrowUpDown,
-  Calendar,
   RotateCw,
 } from 'lucide-vue-next';
 
@@ -19,6 +18,7 @@ import AppButton from '@/components/ui/AppButton.vue';
 import AppBadge from '@/components/ui/AppBadge.vue';
 import AppAvatar from '@/components/ui/AppAvatar.vue';
 import AppInput from '@/components/ui/AppInput.vue';
+import AppDateRangePicker from '@/components/ui/AppDateRangePicker.vue';
 import AppSelect from '@/components/ui/AppSelect.vue';
 import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue';
 import type { BreadcrumbItem } from '@/components/ui/AppBreadcrumb.vue';
@@ -63,7 +63,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 // ===== 필터 상태 관리 =====
 const searchValue = ref('');
-const dateValue = ref('');
+const dateValue = ref<{ start: Date; end: Date } | undefined>();
 const statusFilter = ref('');
 const statusOptions = [
   { value: 'active', label: 'Active' },
@@ -349,11 +349,11 @@ const filteredUsers = computed(() => {
               <AppInput v-model="searchValue" placeholder="Search..." :icon="Search" />
             </div>
             <!-- 날짜 필터 (Mock) -->
-            <div :class="cn('flex w-full flex-col gap-1.5 md:w-48')">
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-72')">
               <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Date Range
               </label>
-              <AppInput v-model="dateValue" placeholder="Select Range" :icon="Calendar" />
+              <AppDateRangePicker v-model="dateValue" />
             </div>
             <!-- 상태 필터 -->
             <div :class="cn('flex w-full flex-col gap-1.5 md:w-40')">
@@ -365,74 +365,12 @@ const filteredUsers = computed(() => {
 
             <!-- 우측 아이콘 버튼 그룹 (Refresh, Search) -->
             <div :class="cn('ml-auto flex items-center gap-1 pb-1')">
-              <AppButton variant="ghost" class="h-9 w-9 rounded-full p-0" title="Refresh">
-                <RotateCw :class="cn('size-4')" />
+              <AppButton variant="primary" size="icon" class="h-11 w-11" title="Search">
+                <Search :class="cn('size-7')" />
               </AppButton>
-              <AppButton variant="ghost" class="h-9 w-9 rounded-full p-0" title="Search">
-                <Search :class="cn('size-4')" />
+              <AppButton variant="primary" size="icon" class="h-11 w-11" title="Refresh">
+                <RotateCw :class="cn('size-7')" />
               </AppButton>
-            </div>
-          </div>
-          <!-- 페이지네이션 -->
-          <div
-            :class="
-              cn(
-                'flex items-center justify-between border-t border-slate-100 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/50',
-              )
-            "
-          >
-            <span :class="cn('text-sm text-slate-500')"
-              >Showing <span :class="cn('font-bold text-slate-900 dark:text-white')">1-10</span> of
-              45 users</span
-            >
-            <div :class="cn('flex items-center gap-1')">
-              <button
-                :class="
-                  cn(
-                    'rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-all hover:bg-white disabled:opacity-50 dark:border-slate-700 dark:hover:bg-slate-800',
-                  )
-                "
-                disabled
-              >
-                <ChevronLeft :class="cn('size-4')" />
-              </button>
-              <button
-                :class="
-                  cn(
-                    'bg-primary shadow-primary/20 rounded-lg px-3 py-1.5 text-sm font-medium text-white shadow-sm',
-                  )
-                "
-              >
-                1
-              </button>
-              <button
-                :class="
-                  cn(
-                    'rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-white dark:text-slate-400 dark:hover:bg-slate-800',
-                  )
-                "
-              >
-                2
-              </button>
-              <button
-                :class="
-                  cn(
-                    'rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-white dark:text-slate-400 dark:hover:bg-slate-800',
-                  )
-                "
-              >
-                3
-              </button>
-              <span :class="cn('px-2 text-slate-400')">...</span>
-              <button
-                :class="
-                  cn(
-                    'rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-all hover:bg-white dark:border-slate-700 dark:hover:bg-slate-800',
-                  )
-                "
-              >
-                <ChevronRight :class="cn('size-4')" />
-              </button>
             </div>
           </div>
         </AppFilterPanel>

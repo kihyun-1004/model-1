@@ -7,14 +7,17 @@ const props = withDefaults(
     /** 버튼 변형 스타일 */
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'icon' | 'outline';
     /** 버튼 크기 */
-    size?: 'sm' | 'md' | 'lg';
+    size?: 'sm' | 'md' | 'lg' | 'icon';
     /** 비활성화 여부 */
     disabled?: boolean;
+    /** 추가 클래스 */
+    class?: string;
   }>(),
   {
     variant: 'primary',
     size: 'md',
     disabled: false,
+    class: '',
   },
 );
 
@@ -48,20 +51,23 @@ const sizeClasses = computed(() => {
     };
     return map[props.size] || map.md;
   }
+
   const map: Record<string, string> = {
     sm: 'px-3 py-1.5 text-xs gap-1',
     md: 'px-4 py-2 text-sm gap-2',
     lg: 'px-5 py-2.5 text-base gap-2',
+    icon: 'h-9 w-9 p-0',
   };
   return map[props.size] || map.md;
 });
 
 const classes = computed(() =>
   cn(
-    'inline-flex cursor-pointer items-center rounded-lg font-medium transition-all',
+    'inline-flex cursor-pointer items-center justify-center rounded-lg font-medium transition-all',
     'disabled:cursor-not-allowed disabled:opacity-50',
     variantClasses.value,
     sizeClasses.value,
+    props.class,
   ),
 );
 </script>
