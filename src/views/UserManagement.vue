@@ -26,7 +26,6 @@ import PageHeader from '@/components/ui/PageHeader.vue';
 import Pagination from '@/components/ui/Pagination.vue';
 import FilterPanel from '@/components/ui/FilterPanel.vue';
 import BulkActionBar from '@/components/ui/BulkActionBar.vue';
-import DashboardLayout from '@/components/layout/DashboardLayout.vue';
 
 // ===== 타입 정의 (Mock Data용) =====
 type UserStatus = 'active' | 'inactive' | 'pending';
@@ -321,7 +320,6 @@ const filteredUsers = computed(() => {
 </script>
 
 <template>
-  <DashboardLayout>
   <div
     :class="cn('flex-1 flex flex-col min-h-0 bg-background-light dark:bg-background-dark')"
   >
@@ -474,5 +472,4 @@ const filteredUsers = computed(() => {
       </DataTable>
     </div>
   </div>
-  </DashboardLayout>
 </template>

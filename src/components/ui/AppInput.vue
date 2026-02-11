@@ -14,6 +14,8 @@ const props = withDefaults(
     icon?: Component;
     /** 비활성화 여부 */
     disabled?: boolean;
+    /** 접근성 ID */
+    id?: string;
   }>(),
   {
     modelValue: '',
@@ -50,6 +52,7 @@ function handleInput(event: Event) {
     />
 
     <input
+      :id="id"
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
@@ -60,12 +63,26 @@ function handleInput(event: Event) {
           'text-slate-900 dark:text-white',
           'border border-slate-300 dark:border-slate-700',
           'focus:border-primary focus:ring-1 focus:ring-primary',
-          'rounded-lg text-sm transition-all shadow-sm',
+          'rounded-lg text-sm transition-all shadow-xs',
           'disabled:opacity-50 disabled:cursor-not-allowed',
-          hasIcon ? 'pl-9 pr-4' : 'px-4',
+          hasIcon ? 'pl-9' : 'pl-4',
+          $slots.suffix ? 'pr-9' : 'pr-4',
         )
       "
       @input="handleInput"
     />
+
+    <!-- 오른쪽 슬롯 (아이콘/버튼 등) -->
+    <div
+      v-if="$slots.suffix"
+      :class="
+        cn(
+          'absolute right-3 top-1/2 -translate-y-1/2 text-slate-400',
+          'flex items-center justify-center',
+        )
+      "
+    >
+      <slot name="suffix" />
+    </div>
   </div>
 </template>
