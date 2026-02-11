@@ -25,16 +25,13 @@ defineEmits<{
 // 변형별 스타일 매핑
 const variantClasses = computed(() => {
   const map: Record<string, string> = {
-    primary:
-      'bg-primary hover:bg-primary/90 text-white shadow-sm',
+    primary: 'bg-primary hover:bg-primary/90 text-white shadow-sm',
     secondary:
       'bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white shadow-sm',
     ghost:
       'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700',
-    danger:
-      'bg-red-600 hover:bg-red-700 text-white shadow-sm',
-    icon:
-      'text-slate-400 hover:text-primary hover:bg-slate-200 dark:hover:bg-slate-700 rounded',
+    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-sm',
+    icon: 'text-slate-400 hover:text-primary hover:bg-slate-200 dark:hover:bg-slate-700 rounded',
     outline:
       'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm',
   };
@@ -61,8 +58,8 @@ const sizeClasses = computed(() => {
 
 const classes = computed(() =>
   cn(
-    'inline-flex items-center font-medium rounded-lg transition-all cursor-pointer',
-    'disabled:opacity-50 disabled:cursor-not-allowed',
+    'inline-flex cursor-pointer items-center rounded-lg font-medium transition-all',
+    'disabled:cursor-not-allowed disabled:opacity-50',
     variantClasses.value,
     sizeClasses.value,
   ),
@@ -70,11 +67,7 @@ const classes = computed(() =>
 </script>
 
 <template>
-  <button
-    :class="classes"
-    :disabled="disabled"
-    @click="$emit('click', $event)"
-  >
+  <button :class="classes" :disabled="disabled" @click="$emit('click', $event)">
     <slot />
   </button>
 </template>

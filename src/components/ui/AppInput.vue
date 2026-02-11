@@ -43,12 +43,7 @@ function handleInput(event: Event) {
     <component
       :is="icon"
       v-if="hasIcon"
-      :class="
-        cn(
-          'absolute left-3 top-1/2 -translate-y-1/2 text-slate-400',
-          'size-4',
-        )
-      "
+      :class="cn('absolute top-1/2 left-3 -translate-y-1/2 text-slate-400', 'size-4')"
     />
 
     <input
@@ -59,12 +54,12 @@ function handleInput(event: Event) {
       :disabled="disabled"
       :class="
         cn(
-          'w-full py-2 bg-white dark:bg-slate-900',
+          'w-full bg-white py-2 dark:bg-slate-900',
           'text-slate-900 dark:text-white',
           'border border-slate-300 dark:border-slate-700',
-          'focus:border-primary focus:ring-1 focus:ring-primary',
-          'rounded-lg text-sm transition-all shadow-xs',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'focus:border-primary focus:ring-primary focus:ring-1',
+          'rounded-lg text-sm shadow-xs transition-all',
+          'disabled:cursor-not-allowed disabled:opacity-50',
           hasIcon ? 'pl-9' : 'pl-4',
           $slots.suffix ? 'pr-9' : 'pr-4',
         )
@@ -77,7 +72,7 @@ function handleInput(event: Event) {
       v-if="$slots.suffix"
       :class="
         cn(
-          'absolute right-3 top-1/2 -translate-y-1/2 text-slate-400',
+          'absolute top-1/2 right-3 -translate-y-1/2 text-slate-400',
           'flex items-center justify-center',
         )
       "

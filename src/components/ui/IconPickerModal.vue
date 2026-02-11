@@ -119,7 +119,7 @@ function handleKeydown(event: KeyboardEvent) {
                 'bg-white dark:bg-slate-800',
                 'w-full max-w-2xl rounded-xl',
                 'shadow-2xl',
-                'flex flex-col max-h-[85vh]',
+                'flex max-h-[85vh] flex-col',
               )
             "
             role="dialog"
@@ -138,17 +138,11 @@ function handleKeydown(event: KeyboardEvent) {
               <div>
                 <h2
                   id="icon-picker-title"
-                  :class="
-                    cn('text-xl font-semibold text-slate-900 dark:text-white')
-                  "
+                  :class="cn('text-xl font-semibold text-slate-900 dark:text-white')"
                 >
                   아이콘 선택
                 </h2>
-                <p
-                  :class="
-                    cn('text-sm text-slate-500 dark:text-slate-400 mt-1')
-                  "
-                >
+                <p :class="cn('mt-1 text-sm text-slate-500 dark:text-slate-400')">
                   메뉴 항목에 사용할 아이콘을 선택하세요.
                 </p>
               </div>
@@ -157,9 +151,9 @@ function handleKeydown(event: KeyboardEvent) {
                   cn(
                     'text-slate-400 hover:text-slate-600',
                     'dark:hover:text-slate-200',
-                    'transition-colors rounded-lg p-2',
+                    'rounded-lg p-2 transition-colors',
                     'hover:bg-slate-100 dark:hover:bg-slate-700',
-                    'focus:outline-none focus:ring-2 focus:ring-primary/50',
+                    'focus:ring-primary/50 focus:ring-2 focus:outline-none',
                   )
                 "
                 @click="closeModal"
@@ -169,22 +163,16 @@ function handleKeydown(event: KeyboardEvent) {
             </div>
 
             <!-- 모달 콘텐츠 영역 -->
-            <div class="flex-1 flex flex-col overflow-hidden">
+            <div class="flex flex-1 flex-col overflow-hidden">
               <!-- 검색 바 -->
               <div class="px-6 pt-6 pb-4">
                 <div class="relative">
                   <div
                     :class="
-                      cn(
-                        'absolute inset-y-0 left-0 pl-3',
-                        'flex items-center pointer-events-none',
-                      )
+                      cn('absolute inset-y-0 left-0 pl-3', 'pointer-events-none flex items-center')
                     "
                   >
-                    <Search
-                      :size="18"
-                      :class="cn('text-slate-400')"
-                    />
+                    <Search :size="18" :class="cn('text-slate-400')" />
                   </div>
                   <input
                     ref="searchInputRef"
@@ -193,12 +181,12 @@ function handleKeydown(event: KeyboardEvent) {
                     placeholder="아이콘 검색 (예: settings, user, home)..."
                     :class="
                       cn(
-                        'block w-full pl-10 pr-3 py-2.5',
+                        'block w-full py-2.5 pr-3 pl-10',
                         'border border-slate-300 dark:border-slate-600',
                         'rounded-lg leading-5',
                         'bg-white dark:bg-slate-900',
                         'placeholder-slate-400',
-                        'focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary',
+                        'focus:ring-primary focus:border-primary focus:ring-2 focus:outline-none',
                         'text-sm text-slate-900 dark:text-white',
                         'transition-shadow',
                       )
@@ -207,22 +195,16 @@ function handleKeydown(event: KeyboardEvent) {
                 </div>
 
                 <!-- 카테고리 필터 -->
-                <div
-                  :class="
-                    cn(
-                      'flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide',
-                    )
-                  "
-                >
+                <div :class="cn('scrollbar-hide mt-3 flex gap-2 overflow-x-auto pb-1')">
                   <button
                     v-for="category in iconCategories"
                     :key="category"
                     :class="
                       cn(
-                        'px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap transition-colors',
+                        'rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap transition-colors',
                         selectedCategory === category
-                          ? 'text-primary bg-primary/10 border border-primary/20'
-                          : 'text-slate-500 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:text-white',
+                          ? 'text-primary bg-primary/10 border-primary/20 border'
+                          : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-700 dark:text-slate-300 dark:hover:text-white',
                       )
                     "
                     @click="selectedCategory = category"
@@ -233,7 +215,7 @@ function handleKeydown(event: KeyboardEvent) {
               </div>
 
               <!-- 아이콘 그리드 -->
-              <div class="flex-1 overflow-y-auto custom-scrollbar px-6 pb-6">
+              <div class="custom-scrollbar flex-1 overflow-y-auto px-6 pb-6">
                 <!-- 결과 없음 표시 -->
                 <div
                   v-if="filteredIcons.length === 0"
@@ -245,18 +227,12 @@ function handleKeydown(event: KeyboardEvent) {
                   "
                 >
                   <Search :size="40" class="mb-3 opacity-50" />
-                  <p class="text-sm">
-                    검색 결과가 없습니다.
-                  </p>
+                  <p class="text-sm">검색 결과가 없습니다.</p>
                 </div>
 
                 <div
                   v-else
-                  :class="
-                    cn(
-                      'grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-3',
-                    )
-                  "
+                  :class="cn('grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7')"
                 >
                   <button
                     v-for="iconItem in filteredIcons"
@@ -265,14 +241,17 @@ function handleKeydown(event: KeyboardEvent) {
                       cn(
                         'group flex flex-col items-center justify-center',
                         'aspect-square rounded-lg transition-all',
-                        'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary',
+                        'focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none',
                         tempSelectedIcon === iconItem.name
-                          ? 'border-2 border-primary bg-primary/10 dark:bg-primary/20'
-                          : 'border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-primary/5 dark:hover:bg-primary/10',
+                          ? 'border-primary bg-primary/10 dark:bg-primary/20 border-2'
+                          : 'hover:border-primary/50 hover:bg-primary/5 dark:hover:bg-primary/10 border border-slate-200 dark:border-slate-700',
                       )
                     "
                     @click="selectIcon(iconItem.name)"
-                    @dblclick="selectIcon(iconItem.name); confirmSelection()"
+                    @dblclick="
+                      selectIcon(iconItem.name);
+                      confirmSelection();
+                    "
                   >
                     <component
                       :is="iconItem.component"
@@ -282,17 +261,17 @@ function handleKeydown(event: KeyboardEvent) {
                           'mb-1 transition-colors',
                           tempSelectedIcon === iconItem.name
                             ? 'text-primary'
-                            : 'text-slate-600 dark:text-slate-300 group-hover:text-primary',
+                            : 'group-hover:text-primary text-slate-600 dark:text-slate-300',
                         )
                       "
                     />
                     <span
                       :class="
                         cn(
-                          'text-[10px] truncate w-full px-1 text-center transition-colors',
+                          'w-full truncate px-1 text-center text-[10px] transition-colors',
                           tempSelectedIcon === iconItem.name
                             ? 'text-primary font-medium'
-                            : 'text-slate-500 dark:text-slate-400 group-hover:text-primary',
+                            : 'group-hover:text-primary text-slate-500 dark:text-slate-400',
                         )
                       "
                     >
@@ -307,21 +286,21 @@ function handleKeydown(event: KeyboardEvent) {
             <div
               :class="
                 cn(
-                  'p-6 border-t border-slate-100 dark:border-slate-700',
+                  'border-t border-slate-100 p-6 dark:border-slate-700',
                   'bg-slate-50 dark:bg-slate-900/50',
-                  'rounded-b-xl flex justify-end gap-3',
+                  'flex justify-end gap-3 rounded-b-xl',
                 )
               "
             >
               <button
                 :class="
                   cn(
-                    'px-5 py-2.5 rounded-lg',
+                    'rounded-lg px-5 py-2.5',
                     'border border-slate-300 dark:border-slate-600',
                     'text-sm font-medium',
                     'text-slate-700 dark:text-slate-300',
                     'hover:bg-slate-100 dark:hover:bg-slate-700',
-                    'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400',
+                    'focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:outline-none',
                     'transition-colors',
                   )
                 "
@@ -332,14 +311,14 @@ function handleKeydown(event: KeyboardEvent) {
               <button
                 :class="
                   cn(
-                    'px-5 py-2.5 rounded-lg',
+                    'rounded-lg px-5 py-2.5',
                     'bg-primary hover:bg-primary/90',
                     'text-sm font-medium text-white',
                     'shadow-sm',
-                    'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary',
+                    'focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none',
                     'transition-colors',
                     'flex items-center gap-2',
-                    'disabled:opacity-50 disabled:cursor-not-allowed',
+                    'disabled:cursor-not-allowed disabled:opacity-50',
                   )
                 "
                 :disabled="!tempSelectedIcon"

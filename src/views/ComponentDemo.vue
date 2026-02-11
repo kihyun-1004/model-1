@@ -55,38 +55,20 @@ const breadcrumbItems: BreadcrumbItem[] = [
 </script>
 
 <template>
-  <main
-    :class="
-      cn(
-        'min-h-screen bg-background-light dark:bg-background-dark p-8 space-y-10',
-      )
-    "
-  >
-    <h1 :class="cn('text-3xl font-bold text-slate-900 dark:text-white')">
-      UI 컴포넌트 데모
-    </h1>
+  <main :class="cn('bg-background-light dark:bg-background-dark min-h-screen space-y-10 p-8')">
+    <h1 :class="cn('text-3xl font-bold text-slate-900 dark:text-white')">UI 컴포넌트 데모</h1>
 
     <!-- ============================================ -->
     <!-- Phase 1: Atomic 컴포넌트 -->
     <!-- ============================================ -->
     <div :class="cn('space-y-10')">
-      <h2
-        :class="
-          cn(
-            'text-lg font-bold text-primary border-b border-primary/30 pb-2',
-          )
-        "
-      >
+      <h2 :class="cn('text-primary border-primary/30 border-b pb-2 text-lg font-bold')">
         Phase 1: Atomic 컴포넌트
       </h2>
 
       <!-- 버튼 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          AppButton
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppButton</h3>
         <div :class="cn('flex flex-wrap items-center gap-3')">
           <AppButton variant="primary">
             <Plus :class="cn('size-4')" />
@@ -118,11 +100,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 배지 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          AppBadge
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppBadge</h3>
         <div :class="cn('flex items-center gap-3')">
           <AppBadge variant="success">ACTIVE</AppBadge>
           <AppBadge variant="default">INACTIVE</AppBadge>
@@ -132,11 +110,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 아바타 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          AppAvatar
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppAvatar</h3>
         <div :class="cn('flex items-center gap-3')">
           <AppAvatar initials="JS" color="blue" />
           <AppAvatar initials="ER" color="slate" />
@@ -158,39 +132,17 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 체크박스 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          AppCheckbox
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppCheckbox</h3>
         <div :class="cn('flex items-center gap-6')">
-          <label
-            :class="
-              cn(
-                'flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300',
-              )
-            "
-          >
+          <label :class="cn('flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300')">
             <AppCheckbox v-model="checked1" />
             체크됨: {{ checked1 }}
           </label>
-          <label
-            :class="
-              cn(
-                'flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300',
-              )
-            "
-          >
+          <label :class="cn('flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300')">
             <AppCheckbox v-model="checked2" />
             미체크: {{ checked2 }}
           </label>
-          <label
-            :class="
-              cn(
-                'flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300',
-              )
-            "
-          >
+          <label :class="cn('flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300')">
             <AppCheckbox v-model="indeterminate" :indeterminate="true" />
             Indeterminate
           </label>
@@ -199,46 +151,20 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 입력 필드 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          AppInput
-        </h3>
-        <div
-          :class="
-            cn('flex flex-col md:flex-row items-start gap-4 max-w-2xl')
-          "
-        >
-          <AppInput
-            v-model="searchValue"
-            placeholder="Search..."
-            :icon="Search"
-          />
-          <AppInput
-            v-model="dateValue"
-            placeholder="Select Range"
-            :icon="Calendar"
-          />
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppInput</h3>
+        <div :class="cn('flex max-w-2xl flex-col items-start gap-4 md:flex-row')">
+          <AppInput v-model="searchValue" placeholder="Search..." :icon="Search" />
+          <AppInput v-model="dateValue" placeholder="Select Range" :icon="Calendar" />
           <AppInput placeholder="아이콘 없는 입력" />
         </div>
       </section>
 
       <!-- 셀렉트 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          AppSelect
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppSelect</h3>
         <div :class="cn('max-w-xs')">
-          <AppSelect
-            v-model="selectValue"
-            :options="statusOptions"
-            placeholder="All Status"
-          />
-          <p :class="cn('mt-2 text-sm text-slate-500')">
-            선택된 값: {{ selectValue || '없음' }}
-          </p>
+          <AppSelect v-model="selectValue" :options="statusOptions" placeholder="All Status" />
+          <p :class="cn('mt-2 text-sm text-slate-500')">선택된 값: {{ selectValue || '없음' }}</p>
         </div>
       </section>
     </div>
@@ -247,27 +173,19 @@ const breadcrumbItems: BreadcrumbItem[] = [
     <!-- Phase 2: Molecule 컴포넌트 -->
     <!-- ============================================ -->
     <div :class="cn('space-y-10')">
-      <h2
-        :class="
-          cn(
-            'text-lg font-bold text-primary border-b border-primary/30 pb-2',
-          )
-        "
-      >
+      <h2 :class="cn('text-primary border-primary/30 border-b pb-2 text-lg font-bold')">
         Phase 2: Molecule 컴포넌트
       </h2>
 
       <!-- 브레드크럼 + 페이지 헤더 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">
           Breadcrumb + PageHeader
         </h3>
         <div
           :class="
             cn(
-              'bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800',
+              'rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900',
             )
           "
         >
@@ -287,62 +205,26 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 필터 패널 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          FilterPanel
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">FilterPanel</h3>
         <FilterPanel>
-          <div
-            :class="cn('flex flex-col md:flex-row items-end gap-4 w-full')"
-          >
-            <div :class="cn('flex flex-col w-full md:w-64 gap-1.5')">
-              <label
-                :class="
-                  cn(
-                    'text-xs font-bold text-slate-700 dark:text-slate-300 ml-1',
-                  )
-                "
-              >
+          <div :class="cn('flex w-full flex-col items-end gap-4 md:flex-row')">
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-64')">
+              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Search
               </label>
-              <AppInput
-                v-model="searchValue"
-                placeholder="Search..."
-                :icon="Search"
-              />
+              <AppInput v-model="searchValue" placeholder="Search..." :icon="Search" />
             </div>
-            <div :class="cn('flex flex-col w-full md:w-48 gap-1.5')">
-              <label
-                :class="
-                  cn(
-                    'text-xs font-bold text-slate-700 dark:text-slate-300 ml-1',
-                  )
-                "
-              >
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-48')">
+              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Date Range
               </label>
-              <AppInput
-                v-model="dateValue"
-                placeholder="Select Range"
-                :icon="Calendar"
-              />
+              <AppInput v-model="dateValue" placeholder="Select Range" :icon="Calendar" />
             </div>
-            <div :class="cn('flex flex-col w-full md:w-40 gap-1.5')">
-              <label
-                :class="
-                  cn(
-                    'text-xs font-bold text-slate-700 dark:text-slate-300 ml-1',
-                  )
-                "
-              >
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-40')">
+              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Status
               </label>
-              <AppSelect
-                v-model="selectValue"
-                :options="statusOptions"
-                placeholder="All Status"
-              />
+              <AppSelect v-model="selectValue" :options="statusOptions" placeholder="All Status" />
             </div>
             <div :class="cn('ml-auto flex items-center gap-2')">
               <AppButton variant="icon" size="lg">
@@ -359,15 +241,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 벌크 액션 바 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          BulkActionBar
-        </h3>
-        <BulkActionBar
-          :selected-count="selectedCount"
-          @delete="selectedCount = 0"
-        >
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">BulkActionBar</h3>
+        <BulkActionBar :selected-count="selectedCount" @delete="selectedCount = 0">
           <template #actions>
             <AppButton variant="ghost">
               <Download :class="cn('size-4')" />
@@ -383,15 +258,11 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
       <!-- 페이지네이션 -->
       <section :class="cn('space-y-4')">
-        <h3
-          :class="cn('text-xl font-semibold text-slate-800 dark:text-white')"
-        >
-          Pagination
-        </h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">Pagination</h3>
         <div
           :class="
             cn(
-              'bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden',
+              'overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900',
             )
           "
         >
@@ -402,9 +273,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
             :page-size="12"
           />
         </div>
-        <p :class="cn('text-sm text-slate-500')">
-          현재 페이지: {{ currentPage }}
-        </p>
+        <p :class="cn('text-sm text-slate-500')">현재 페이지: {{ currentPage }}</p>
       </section>
     </div>
   </main>

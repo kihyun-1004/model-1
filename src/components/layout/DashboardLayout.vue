@@ -10,18 +10,12 @@ import { cn } from '@/lib/utils';
     전체 애플리케이션의 레이아웃 셸
     Flexbox를 사용하여 Sidebar와 MainContent를 배치
   -->
-  <div
-    :class="
-      cn(
-        'flex h-screen overflow-hidden bg-background-light dark:bg-background-dark',
-      )
-    "
-  >
+  <div :class="cn('bg-background-light dark:bg-background-dark flex h-screen overflow-hidden')">
     <!-- 사이드바 (Flex Item) -->
     <AppSidebar />
 
     <!-- 메인 컨텐츠 영역 (Flex-1: 남은 공간 모두 차지) -->
-    <div :class="cn('flex-1 flex flex-col overflow-hidden transition-all')">
+    <div :class="cn('flex flex-1 flex-col overflow-hidden transition-all')">
       <!-- 헤더 -->
       <AppHeader />
 
@@ -34,7 +28,7 @@ import { cn } from '@/lib/utils';
       <main
         :class="
           cn(
-            'flex-1 flex flex-col overflow-hidden bg-background-light dark:bg-background-dark relative',
+            'bg-background-light dark:bg-background-dark relative flex flex-1 flex-col overflow-hidden',
           )
         "
       >

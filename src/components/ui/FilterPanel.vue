@@ -27,8 +27,8 @@ function toggle() {
   <div
     :class="
       cn(
-        'bg-white dark:bg-slate-900 rounded-xl',
-        'border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden',
+        'rounded-xl bg-white dark:bg-slate-900',
+        'overflow-hidden border border-slate-200 shadow-sm dark:border-slate-800',
       )
     "
   >
@@ -36,7 +36,7 @@ function toggle() {
     <div
       :class="
         cn(
-          'px-4 py-3 border-b border-slate-200 dark:border-slate-800',
+          'border-b border-slate-200 px-4 py-3 dark:border-slate-800',
           'flex items-center justify-between',
           'bg-slate-50 dark:bg-slate-800/50',
         )
@@ -44,13 +44,10 @@ function toggle() {
     >
       <h2
         :class="
-          cn(
-            'text-sm font-semibold text-slate-700 dark:text-slate-200',
-            'flex items-center gap-2',
-          )
+          cn('text-sm font-semibold text-slate-700 dark:text-slate-200', 'flex items-center gap-2')
         "
       >
-        <Filter :class="cn('size-4 text-primary')" />
+        <Filter :class="cn('text-primary size-4')" />
         {{ title }}
       </h2>
 
@@ -60,19 +57,14 @@ function toggle() {
             'text-slate-500 hover:text-slate-700',
             'dark:text-slate-400 dark:hover:text-slate-200',
             'flex items-center gap-1 text-sm font-medium',
-            'focus:outline-none cursor-pointer',
+            'cursor-pointer focus:outline-none',
           )
         "
         @click="toggle"
       >
         <span>Toggle Filters</span>
         <ChevronUp
-          :class="
-            cn(
-              'size-4 transition-transform duration-300',
-              isCollapsed && 'rotate-180',
-            )
-          "
+          :class="cn('size-4 transition-transform duration-300', isCollapsed && 'rotate-180')"
         />
       </button>
     </div>
@@ -81,8 +73,8 @@ function toggle() {
     <div
       :class="
         cn(
-          'transition-all duration-300 overflow-hidden',
-          isCollapsed ? 'max-h-0 opacity-0 py-0' : 'max-h-[500px] opacity-100 p-4',
+          'overflow-hidden transition-all duration-300',
+          isCollapsed ? 'max-h-0 py-0 opacity-0' : 'max-h-[500px] p-4 opacity-100',
         )
       "
     >

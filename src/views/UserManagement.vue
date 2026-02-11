@@ -107,12 +107,11 @@ function handleAdd() {
 }
 
 // ===== 상태별 뱃지 배리언트 매핑 =====
-const statusVariantMap: Record<UserStatus, 'success' | 'default' | 'warning'> =
-  {
-    active: 'success',
-    inactive: 'default',
-    pending: 'warning',
-  };
+const statusVariantMap: Record<UserStatus, 'success' | 'default' | 'warning'> = {
+  active: 'success',
+  inactive: 'default',
+  pending: 'warning',
+};
 
 // ===== TanStack Table 컬럼 정의 =====
 const columnHelper = createColumnHelper<User>();
@@ -122,8 +121,7 @@ const columns: ColumnDef<User, any>[] = [
   // 1. ID 컬럼
   columnHelper.accessor('id', {
     header: 'ID',
-    cell: (info) =>
-      h('span', { class: 'text-slate-500' }, info.getValue()),
+    cell: (info) => h('span', { class: 'text-slate-500' }, info.getValue()),
     size: 120,
   }),
   // 2. 이름/아바타 컬럼 (커스텀 렌더링)
@@ -140,8 +138,7 @@ const columns: ColumnDef<User, any>[] = [
           h(
             'span',
             {
-              class:
-                'font-medium text-slate-900 dark:text-white leading-tight',
+              class: 'font-medium text-slate-900 dark:text-white leading-tight',
             },
             row.name,
           ),
@@ -152,12 +149,7 @@ const columns: ColumnDef<User, any>[] = [
   // 3. 역할 컬럼
   columnHelper.accessor('role', {
     header: 'Role',
-    cell: (info) =>
-      h(
-        'span',
-        { class: 'text-slate-600 dark:text-slate-400' },
-        info.getValue(),
-      ),
+    cell: (info) => h('span', { class: 'text-slate-600 dark:text-slate-400' }, info.getValue()),
     size: 120,
   }),
   // 4. 상태 컬럼 (뱃지 사용)
@@ -165,26 +157,16 @@ const columns: ColumnDef<User, any>[] = [
     header: 'Status',
     cell: (info) => {
       const status = info.getValue() as UserStatus;
-      return h(
-        AppBadge,
-        { variant: statusVariantMap[status] },
-        () => status.toUpperCase(),
-      );
+      return h(AppBadge, { variant: statusVariantMap[status] }, () => status.toUpperCase());
     },
     size: 100,
   }),
   // 5. 마지막 활동 컬럼
   columnHelper.accessor('lastActive', {
     header: 'Last Active',
-    cell: (info) =>
-      h(
-        'span',
-        { class: 'text-slate-500 text-xs' },
-        info.getValue(),
-      ),
+    cell: (info) => h('span', { class: 'text-slate-500 text-xs' }, info.getValue()),
     size: 130,
   }),
-
 ];
 
 // ===== 샘플 데이터 (퍼블리싱 원본과 동일) =====
@@ -320,11 +302,9 @@ const filteredUsers = computed(() => {
 </script>
 
 <template>
-  <div
-    :class="cn('flex-1 flex flex-col min-h-0 bg-background-light dark:bg-background-dark')"
-  >
+  <div :class="cn('bg-background-light dark:bg-background-dark flex min-h-0 flex-1 flex-col')">
     <!-- 상단: 브레드크럼 + 헤더 + 필터 -->
-    <div :class="cn('p-8 pb-0 shrink-0')">
+    <div :class="cn('shrink-0 p-8 pb-0')">
       <!-- 페이지 헤더 -->
       <PageHeader title="User Management">
         <template #breadcrumb>
@@ -338,23 +318,19 @@ const filteredUsers = computed(() => {
             :disabled="selectedRows.length === 0"
             @click="handleBulkDelete"
           >
-            <Trash2 :class="cn('size-4 mr-1')" />
+            <Trash2 :class="cn('mr-1 size-4')" />
             <span>Delete</span>
           </AppButton>
 
           <!-- 수정 버튼 (1개 선택 시 활성화) -->
-          <AppButton
-            variant="secondary"
-            :disabled="selectedRows.length !== 1"
-            @click="handleEdit"
-          >
-            <Pencil :class="cn('size-4 mr-1')" />
+          <AppButton variant="secondary" :disabled="selectedRows.length !== 1" @click="handleEdit">
+            <Pencil :class="cn('mr-1 size-4')" />
             <span>Edit</span>
           </AppButton>
 
           <!-- 추가 버튼 -->
           <AppButton variant="primary" @click="handleAdd">
-            <Plus :class="cn('size-4 mr-1')" />
+            <Plus :class="cn('mr-1 size-4')" />
             <span>Add</span>
           </AppButton>
         </template>
@@ -363,82 +339,107 @@ const filteredUsers = computed(() => {
       <!-- 필터 패널 -->
       <div :class="cn('mb-6')">
         <FilterPanel>
-          <div
-            :class="cn('flex flex-col md:flex-row items-end gap-4 w-full')"
-          >
+          <div :class="cn('flex w-full flex-col items-end gap-4 md:flex-row')">
             <!-- 검색 입력 -->
-            <div :class="cn('flex flex-col w-full md:w-64 gap-1.5')">
-              <label
-                :class="
-                  cn(
-                    'text-xs font-bold text-slate-700 dark:text-slate-300 ml-1',
-                  )
-                "
-              >
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-64')">
+              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Search
               </label>
-              <AppInput
-                v-model="searchValue"
-                placeholder="Search..."
-                :icon="Search"
-              />
+              <AppInput v-model="searchValue" placeholder="Search..." :icon="Search" />
             </div>
             <!-- 날짜 필터 (Mock) -->
-            <div :class="cn('flex flex-col w-full md:w-48 gap-1.5')">
-              <label
-                :class="
-                  cn(
-                    'text-xs font-bold text-slate-700 dark:text-slate-300 ml-1',
-                  )
-                "
-              >
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-48')">
+              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Date Range
               </label>
-              <AppInput
-                v-model="dateValue"
-                placeholder="Select Range"
-                :icon="Calendar"
-              />
+              <AppInput v-model="dateValue" placeholder="Select Range" :icon="Calendar" />
             </div>
             <!-- 상태 필터 -->
-            <div :class="cn('flex flex-col w-full md:w-40 gap-1.5')">
-              <label
-                :class="
-                  cn(
-                    'text-xs font-bold text-slate-700 dark:text-slate-300 ml-1',
-                  )
-                "
-              >
+            <div :class="cn('flex w-full flex-col gap-1.5 md:w-40')">
+              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
                 Status
               </label>
-              <AppSelect
-                v-model="statusFilter"
-                :options="statusOptions"
-                placeholder="All Status"
-              />
+              <AppSelect v-model="statusFilter" :options="statusOptions" placeholder="All Status" />
             </div>
 
             <!-- 우측 아이콘 버튼 그룹 (Refresh, Search) -->
-            <div :class="cn('flex items-center gap-1 ml-auto pb-1')">
-              <AppButton variant="ghost" class="w-9 h-9 p-0 rounded-full" title="Refresh">
+            <div :class="cn('ml-auto flex items-center gap-1 pb-1')">
+              <AppButton variant="ghost" class="h-9 w-9 rounded-full p-0" title="Refresh">
                 <RotateCw :class="cn('size-4')" />
               </AppButton>
-              <AppButton variant="ghost" class="w-9 h-9 p-0 rounded-full" title="Search">
+              <AppButton variant="ghost" class="h-9 w-9 rounded-full p-0" title="Search">
                 <Search :class="cn('size-4')" />
               </AppButton>
+            </div>
+          </div>
+          <!-- 페이지네이션 -->
+          <div
+            :class="
+              cn(
+                'flex items-center justify-between border-t border-slate-100 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/50',
+              )
+            "
+          >
+            <span :class="cn('text-sm text-slate-500')"
+              >Showing <span :class="cn('font-bold text-slate-900 dark:text-white')">1-10</span> of
+              45 users</span
+            >
+            <div :class="cn('flex items-center gap-1')">
+              <button
+                :class="
+                  cn(
+                    'rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-all hover:bg-white disabled:opacity-50 dark:border-slate-700 dark:hover:bg-slate-800',
+                  )
+                "
+                disabled
+              >
+                <ChevronLeft :class="cn('size-4')" />
+              </button>
+              <button
+                :class="
+                  cn(
+                    'bg-primary shadow-primary/20 rounded-lg px-3 py-1.5 text-sm font-medium text-white shadow-sm',
+                  )
+                "
+              >
+                1
+              </button>
+              <button
+                :class="
+                  cn(
+                    'rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-white dark:text-slate-400 dark:hover:bg-slate-800',
+                  )
+                "
+              >
+                2
+              </button>
+              <button
+                :class="
+                  cn(
+                    'rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-white dark:text-slate-400 dark:hover:bg-slate-800',
+                  )
+                "
+              >
+                3
+              </button>
+              <span :class="cn('px-2 text-slate-400')">...</span>
+              <button
+                :class="
+                  cn(
+                    'rounded-lg border border-slate-200 p-1.5 text-slate-500 transition-all hover:bg-white dark:border-slate-700 dark:hover:bg-slate-800',
+                  )
+                "
+              >
+                <ChevronRight :class="cn('size-4')" />
+              </button>
             </div>
           </div>
         </FilterPanel>
       </div>
 
-
-
       <!-- 벌크 액션 바 (행 선택 시 활성화) -->
       <div :class="cn('mb-4')">
-        <BulkActionBar
-          :selected-count="selectedRows.length"
-          @delete="handleBulkDelete"
-        >
+        <BulkActionBar :selected-count="selectedRows.length" @delete="handleBulkDelete">
           <template #actions>
             <AppButton variant="ghost">
               <Download :class="cn('size-4')" />
@@ -454,7 +455,7 @@ const filteredUsers = computed(() => {
     </div>
 
     <!-- 테이블 영역 -->
-    <div :class="cn('flex-1 overflow-hidden px-8 pb-4 flex flex-col min-h-0')">
+    <div :class="cn('flex min-h-0 flex-1 flex-col overflow-hidden px-8 pb-4')">
       <DataTable
         :columns="columns"
         :data="filteredUsers"

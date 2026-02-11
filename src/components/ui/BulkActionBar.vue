@@ -18,7 +18,7 @@ defineEmits<{
     v-if="selectedCount > 0"
     :class="
       cn(
-        'p-4 bg-primary/5 border border-primary/20 rounded-xl',
+        'bg-primary/5 border-primary/20 rounded-xl border p-4',
         'flex items-center justify-between',
       )
     "
@@ -28,23 +28,19 @@ defineEmits<{
       <span
         :class="
           cn(
-            'flex items-center justify-center w-8 h-8',
-            'rounded-full bg-primary text-white text-sm font-bold',
+            'flex h-8 w-8 items-center justify-center',
+            'bg-primary rounded-full text-sm font-bold text-white',
           )
         "
       >
         {{ selectedCount }}
       </span>
-      <span
-        :class="cn('text-sm font-medium text-slate-700 dark:text-slate-300')"
-      >
+      <span :class="cn('text-sm font-medium text-slate-700 dark:text-slate-300')">
         items selected
       </span>
 
       <!-- 구분선 -->
-      <div
-        :class="cn('h-4 w-[1px] bg-slate-300 dark:bg-slate-700 mx-2')"
-      />
+      <div :class="cn('mx-2 h-4 w-[1px] bg-slate-300 dark:bg-slate-700')" />
 
       <!-- 좌측 액션 슬롯 (Export, Change Status 등) -->
       <slot name="actions" />
@@ -58,7 +54,7 @@ defineEmits<{
             'flex items-center gap-1.5 px-3 py-1.5',
             'text-sm font-medium text-red-600',
             'hover:bg-red-50 dark:hover:bg-red-900/20',
-            'rounded-lg transition-colors cursor-pointer',
+            'cursor-pointer rounded-lg transition-colors',
           )
         "
         @click="$emit('delete')"

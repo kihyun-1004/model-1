@@ -60,7 +60,7 @@ const sizeClasses = computed(() => {
 
 const classes = computed(() =>
   cn(
-    'rounded-full flex items-center justify-center font-bold border shrink-0',
+    'flex shrink-0 items-center justify-center rounded-full border font-bold',
     colorClasses.value,
     sizeClasses.value,
   ),

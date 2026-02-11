@@ -30,9 +30,7 @@ function handleChange(event: Event) {
     :checked="modelValue"
     :indeterminate="indeterminate"
     :class="
-      cn(
-        'custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4',
-      )
+      cn('custom-checkbox text-primary focus:ring-primary h-4 w-4 rounded-sm border-slate-400')
     "
     @change="handleChange"
   />

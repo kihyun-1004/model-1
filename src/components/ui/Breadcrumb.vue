@@ -15,15 +15,10 @@ defineProps<{
 </script>
 
 <template>
-  <nav :class="cn('flex text-sm text-slate-500 mb-2')">
+  <nav :class="cn('mb-2 flex text-sm text-slate-500')">
     <template v-for="(item, index) in items" :key="index">
       <!-- 구분자 -->
-      <span
-        v-if="index > 0"
-        :class="cn('mx-2 text-slate-300 dark:text-slate-600')"
-      >
-        /
-      </span>
+      <span v-if="index > 0" :class="cn('mx-2 text-slate-300 dark:text-slate-600')"> / </span>
 
       <!-- 링크 항목 (마지막이 아닌 경우) -->
       <a
@@ -40,7 +35,7 @@ defineProps<{
         :class="
           cn(
             index === items.length - 1
-              ? 'text-slate-900 dark:text-white font-medium'
+              ? 'font-medium text-slate-900 dark:text-white'
               : 'hover:text-primary cursor-pointer transition-colors',
           )
         "

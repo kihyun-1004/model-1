@@ -18,70 +18,120 @@ const showPassword = ref(false);
 const handleLogin = (e: Event) => {
   e.preventDefault();
   // TODO: 실제 인증 로직 연동
-  console.log('Login attempt:', { username: username.value, password: password.value, rememberMe: rememberMe.value });
+  console.log('Login attempt:', {
+    username: username.value,
+    password: password.value,
+    rememberMe: rememberMe.value,
+  });
   // 임시로 홈으로 이동
   router.push('/');
 };
 </script>
 
 <template>
-  <div :class="cn('min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark font-sans p-4')">
-    <div :class="cn('w-full max-w-[1200px] grid md:grid-cols-2 bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-800')">
-
+  <div
+    :class="
+      cn(
+        'bg-background-light dark:bg-background-dark flex min-h-screen items-center justify-center p-4 font-sans',
+      )
+    "
+  >
+    <div
+      :class="
+        cn(
+          'grid w-full max-w-[1200px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl md:grid-cols-2 dark:border-slate-800 dark:bg-slate-900',
+        )
+      "
+    >
       <!-- Left Side: Brand & Promo (Desktop Only) -->
-      <div :class="cn('hidden md:flex flex-col justify-between p-12 bg-primary relative overflow-hidden')">
+      <div
+        :class="
+          cn('bg-primary relative hidden flex-col justify-between overflow-hidden p-12 md:flex')
+        "
+      >
         <!-- Background Effects -->
-        <div :class="cn('absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl')"></div>
-        <div :class="cn('absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-black opacity-10 rounded-full blur-3xl')"></div>
+        <div
+          :class="
+            cn(
+              'absolute top-0 right-0 -mt-16 -mr-16 h-64 w-64 rounded-full bg-white opacity-10 blur-3xl',
+            )
+          "
+        ></div>
+        <div
+          :class="
+            cn(
+              'absolute bottom-0 left-0 -mb-16 -ml-16 h-64 w-64 rounded-full bg-black opacity-10 blur-3xl',
+            )
+          "
+        ></div>
 
         <!-- Logo -->
         <div :class="cn('relative z-10')">
           <div :class="cn('flex items-center gap-3')">
-            <div :class="cn('w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-lg')">
+            <div
+              :class="
+                cn('flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg')
+              "
+            >
               <Layers :class="cn('text-primary size-6')" />
             </div>
-            <span :class="cn('font-bold text-2xl tracking-tight text-white')">Nexus</span>
+            <span :class="cn('text-2xl font-bold tracking-tight text-white')">Nexus</span>
           </div>
         </div>
 
         <!-- Main Text -->
         <div :class="cn('relative z-10')">
-          <h2 :class="cn('text-4xl font-bold text-white leading-tight mb-6')">Centralized Admin Control & Data Insights</h2>
-          <p :class="cn('text-blue-100 text-lg')">Manage your entire ecosystem with precision through our advanced dashboard and real-time analytics engine.</p>
+          <h2 :class="cn('mb-6 text-4xl leading-tight font-bold text-white')">
+            Centralized Admin Control & Data Insights
+          </h2>
+          <p :class="cn('text-lg text-blue-100')">
+            Manage your entire ecosystem with precision through our advanced dashboard and real-time
+            analytics engine.
+          </p>
         </div>
 
         <!-- Footer / Social Proof -->
         <div :class="cn('relative z-10 flex items-center gap-4')">
           <div :class="cn('flex -space-x-2')">
-            <div :class="cn('w-8 h-8 rounded-full border-2 border-primary bg-blue-400')"></div>
-            <div :class="cn('w-8 h-8 rounded-full border-2 border-primary bg-blue-300')"></div>
-            <div :class="cn('w-8 h-8 rounded-full border-2 border-primary bg-blue-200')"></div>
+            <div :class="cn('border-primary h-8 w-8 rounded-full border-2 bg-blue-400')"></div>
+            <div :class="cn('border-primary h-8 w-8 rounded-full border-2 bg-blue-300')"></div>
+            <div :class="cn('border-primary h-8 w-8 rounded-full border-2 bg-blue-200')"></div>
           </div>
-          <span :class="cn('text-sm text-blue-50 font-medium')">Trusted by 5,000+ teams</span>
+          <span :class="cn('text-sm font-medium text-blue-50')">Trusted by 5,000+ teams</span>
         </div>
       </div>
 
       <!-- Right Side: Login Form -->
-      <div :class="cn('p-8 md:p-16 flex flex-col justify-center')">
+      <div :class="cn('flex flex-col justify-center p-8 md:p-16')">
         <!-- Mobile Logo -->
-        <div :class="cn('flex items-center gap-2 mb-10 md:hidden')">
-          <div :class="cn('w-8 h-8 bg-primary rounded-lg flex items-center justify-center')">
-            <Layers :class="cn('text-white size-5')" />
+        <div :class="cn('mb-10 flex items-center gap-2 md:hidden')">
+          <div :class="cn('bg-primary flex h-8 w-8 items-center justify-center rounded-lg')">
+            <Layers :class="cn('size-5 text-white')" />
           </div>
-          <span :class="cn('font-bold text-xl tracking-tight text-slate-800 dark:text-white')">Nexus</span>
+          <span :class="cn('text-xl font-bold tracking-tight text-slate-800 dark:text-white')"
+            >Nexus</span
+          >
         </div>
 
         <!-- Form Header -->
         <div :class="cn('mb-8')">
-          <h1 :class="cn('text-3xl font-bold text-slate-900 dark:text-white mb-2')">Welcome Back</h1>
-          <p :class="cn('text-slate-500 dark:text-slate-400')">Please sign in to access your admin account.</p>
+          <h1 :class="cn('mb-2 text-3xl font-bold text-slate-900 dark:text-white')">
+            Welcome Back
+          </h1>
+          <p :class="cn('text-slate-500 dark:text-slate-400')">
+            Please sign in to access your admin account.
+          </p>
         </div>
 
         <!-- Login Form -->
         <form :class="cn('space-y-6')" @submit="handleLogin">
           <!-- Username Input -->
           <div :class="cn('space-y-1.5')">
-            <label :class="cn('text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1')" for="username">Username</label>
+            <label
+              :class="cn('ml-1 text-sm font-semibold text-slate-700 dark:text-slate-300')"
+              for="username"
+              >Username</label
+            >
             <AppInput
               id="username"
               v-model="username"
@@ -93,8 +143,18 @@ const handleLogin = (e: Event) => {
           <!-- Password Input -->
           <div :class="cn('space-y-1.5')">
             <div :class="cn('flex items-center justify-between')">
-              <label :class="cn('text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1')" for="password">Password</label>
-              <a :class="cn('text-xs font-semibold text-primary hover:text-primary/80 transition-colors')" href="#">Forgot Password?</a>
+              <label
+                :class="cn('ml-1 text-sm font-semibold text-slate-700 dark:text-slate-300')"
+                for="password"
+                >Password</label
+              >
+              <a
+                :class="
+                  cn('text-primary hover:text-primary/80 text-xs font-semibold transition-colors')
+                "
+                href="#"
+                >Forgot Password?</a
+              >
             </div>
             <AppInput
               id="password"
@@ -106,7 +166,11 @@ const handleLogin = (e: Event) => {
               <template #suffix>
                 <button
                   type="button"
-                  :class="cn('text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-hidden')"
+                  :class="
+                    cn(
+                      'text-slate-400 hover:text-slate-600 focus:outline-hidden dark:hover:text-slate-200',
+                    )
+                  "
                   @click="showPassword = !showPassword"
                 >
                   <EyeOff v-if="showPassword" :class="cn('size-5')" />
@@ -118,23 +182,34 @@ const handleLogin = (e: Event) => {
 
           <!-- Remember Me Checkbox -->
           <div :class="cn('flex items-center')">
-            <label :class="cn('flex items-center gap-2 cursor-pointer group')">
+            <label :class="cn('group flex cursor-pointer items-center gap-2')">
               <AppCheckbox v-model="rememberMe" />
-              <span :class="cn('text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors')">Remember Me</span>
+              <span
+                :class="
+                  cn(
+                    'text-sm text-slate-600 transition-colors group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-slate-200',
+                  )
+                "
+                >Remember Me</span
+              >
             </label>
           </div>
 
           <!-- Submit Button -->
-          <AppButton type="submit" :class="cn('w-full justify-center py-3 text-base shadow-lg shadow-primary/20')" size="lg">
+          <AppButton
+            type="submit"
+            :class="cn('shadow-primary/20 w-full justify-center py-3 text-base shadow-lg')"
+            size="lg"
+          >
             Sign In
           </AppButton>
         </form>
 
         <!-- Sign Up Link -->
-        <div :class="cn('mt-8 pt-8 border-t border-slate-100 dark:border-slate-800 text-center')">
+        <div :class="cn('mt-8 border-t border-slate-100 pt-8 text-center dark:border-slate-800')">
           <p :class="cn('text-sm text-slate-500 dark:text-slate-400')">
             New on our platform?
-            <a :class="cn('font-semibold text-primary hover:underline')" href="#">Request Access</a>
+            <a :class="cn('text-primary font-semibold hover:underline')" href="#">Request Access</a>
           </p>
         </div>
       </div>

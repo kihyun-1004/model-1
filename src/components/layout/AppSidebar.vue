@@ -119,46 +119,28 @@ function isChildActive(to: string) {
   <aside
     :class="
       cn(
-        'shrink-0 bg-white dark:bg-slate-900 flex flex-col transition-all duration-300',
+        'flex shrink-0 flex-col bg-white transition-all duration-300 dark:bg-slate-900',
         // isOpen 값에 따라 너비 조절 (w-64 <-> w-0)
         isOpen
           ? 'w-64 border-r border-slate-200 dark:border-slate-800'
-          : 'w-0 border-none overflow-hidden opacity-0',
+          : 'w-0 overflow-hidden border-none opacity-0',
       )
     "
   >
     <!-- 로고 영역 -->
-    <div
-      :class="
-        cn(
-          'h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800',
-        )
-      "
-    >
+    <div :class="cn('flex h-16 items-center border-b border-slate-200 px-6 dark:border-slate-800')">
       <div :class="cn('flex items-center gap-2')">
-        <div
-          :class="
-            cn('w-8 h-8 bg-primary rounded-lg flex items-center justify-center')
-          "
-        >
-          <Layers :class="cn('text-white size-5')" />
+        <div :class="cn('bg-primary flex h-8 w-8 items-center justify-center rounded-lg')">
+          <Layers :class="cn('size-5 text-white')" />
         </div>
-        <span
-          :class="
-            cn(
-              'font-bold text-xl tracking-tight text-slate-800 dark:text-white',
-            )
-          "
-        >
+        <span :class="cn('text-xl font-bold tracking-tight text-slate-800 dark:text-white')">
           Nexus
         </span>
       </div>
     </div>
 
     <!-- 네비게이션 영역 -->
-    <nav
-      :class="cn('flex-1 px-4 py-6 space-y-1 overflow-y-auto scrollbar-hide')"
-    >
+    <nav :class="cn('scrollbar-hide flex-1 space-y-1 overflow-y-auto px-4 py-6')">
       <template v-for="item in menuItems" :key="item.title">
         <!-- 단일 메뉴 (서브메뉴 없음) -->
         <RouterLink
@@ -166,10 +148,10 @@ function isChildActive(to: string) {
           :to="item.to || '#'"
           :class="
             cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+              'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors',
               isActive(item)
                 ? 'bg-primary/10 text-primary font-medium'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
+                : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800',
             )
           "
         >
@@ -183,10 +165,10 @@ function isChildActive(to: string) {
             @click="toggleMenu(item.title)"
             :class="
               cn(
-                'w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors',
+                'flex w-full items-center justify-between rounded-lg px-3 py-2 transition-colors',
                 isActive(item)
                   ? 'bg-primary/10 text-primary font-medium'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
+                  : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800',
               )
             "
           >
@@ -199,7 +181,7 @@ function isChildActive(to: string) {
               :class="
                 cn(
                   'size-4 transition-transform duration-200',
-                  openMenus[item.title] ? 'transform rotate-180' : '',
+                  openMenus[item.title] ? 'rotate-180 transform' : '',
                 )
               "
             />
@@ -208,7 +190,7 @@ function isChildActive(to: string) {
           <!-- 서브메뉴 목록 (조건부 렌더링) -->
           <div
             v-if="openMenus[item.title]"
-            :class="cn('mt-1 ml-9 space-y-1 border-l-2 border-primary/20')"
+            :class="cn('border-primary/20 mt-1 ml-9 space-y-1 border-l-2')"
           >
             <RouterLink
               v-for="child in item.children"
@@ -216,10 +198,10 @@ function isChildActive(to: string) {
               :to="child.to"
               :class="
                 cn(
-                  'block px-4 py-2 text-sm transition-colors rounded-r-lg',
+                  'block rounded-r-lg px-4 py-2 text-sm transition-colors',
                   isChildActive(child.to)
-                    ? 'text-primary font-medium bg-primary/5'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800/50',
+                    ? 'text-primary bg-primary/5 font-medium'
+                    : 'hover:text-primary text-slate-500 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50',
                 )
               "
             >
@@ -231,13 +213,7 @@ function isChildActive(to: string) {
 
       <!-- 시스템 메뉴 구분선 -->
       <div :class="cn('pt-4 pb-2')">
-        <p
-          :class="
-            cn(
-              'px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider',
-            )
-          "
-        >
+        <p :class="cn('px-3 text-xs font-semibold tracking-wider text-slate-400 uppercase')">
           System
         </p>
       </div>
@@ -249,10 +225,10 @@ function isChildActive(to: string) {
         :to="item.to || '#'"
         :class="
           cn(
-            'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+            'flex items-center gap-3 rounded-lg px-3 py-2 transition-colors',
             isActive(item)
               ? 'bg-primary/10 text-primary font-medium'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
+              : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800',
           )
         "
       >

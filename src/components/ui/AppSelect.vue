@@ -44,23 +44,19 @@ function handleChange(event: Event) {
       :disabled="disabled"
       :class="
         cn(
-          'w-full pl-3 pr-10 py-2 bg-white dark:bg-slate-900',
+          'w-full bg-white py-2 pr-10 pl-3 dark:bg-slate-900',
           'text-slate-900 dark:text-white',
           'border border-slate-300 dark:border-slate-700',
-          'focus:border-primary focus:ring-1 focus:ring-primary',
-          'rounded-lg text-sm transition-all shadow-sm',
-          'appearance-none cursor-pointer',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'focus:border-primary focus:ring-primary focus:ring-1',
+          'rounded-lg text-sm shadow-sm transition-all',
+          'cursor-pointer appearance-none',
+          'disabled:cursor-not-allowed disabled:opacity-50',
         )
       "
       @change="handleChange"
     >
       <option value="">{{ placeholder }}</option>
-      <option
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-      >
+      <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.label }}
       </option>
     </select>
@@ -68,10 +64,7 @@ function handleChange(event: Event) {
     <!-- 커스텀 드롭다운 화살표 아이콘 -->
     <ChevronDown
       :class="
-        cn(
-          'absolute right-3 top-1/2 -translate-y-1/2',
-          'text-slate-400 pointer-events-none size-4',
-        )
+        cn('absolute top-1/2 right-3 -translate-y-1/2', 'pointer-events-none size-4 text-slate-400')
       "
     />
   </div>

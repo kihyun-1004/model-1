@@ -72,7 +72,7 @@ function goToPage(page: number) {
   <div
     :class="
       cn(
-        'px-6 py-4 bg-slate-50 dark:bg-slate-800/50',
+        'bg-slate-50 px-6 py-4 dark:bg-slate-800/50',
         'border-t border-slate-200 dark:border-slate-800',
         'flex items-center justify-between',
       )
@@ -89,9 +89,9 @@ function goToPage(page: number) {
       <button
         :class="
           cn(
-            'p-1 rounded-lg border border-slate-200 dark:border-slate-700',
-            'hover:bg-white dark:hover:bg-slate-700 transition-colors',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
+            'rounded-lg border border-slate-200 p-1 dark:border-slate-700',
+            'transition-colors hover:bg-white dark:hover:bg-slate-700',
+            'disabled:cursor-not-allowed disabled:opacity-50',
           )
         "
         :disabled="currentPage <= 1"
@@ -105,11 +105,7 @@ function goToPage(page: number) {
         <!-- 생략 부호 -->
         <span
           v-if="page === '...'"
-          :class="
-            cn(
-              'px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium',
-            )
-          "
+          :class="cn('rounded-lg px-3 py-1 text-sm font-medium text-slate-600 dark:text-slate-400')"
         >
           ...
         </span>
@@ -119,10 +115,10 @@ function goToPage(page: number) {
           v-else
           :class="
             cn(
-              'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
+              'rounded-lg px-3 py-1 text-sm font-medium transition-colors',
               page === currentPage
                 ? 'bg-primary text-white'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700',
+                : 'text-slate-600 hover:bg-white dark:text-slate-400 dark:hover:bg-slate-700',
             )
           "
           @click="goToPage(page)"
@@ -135,9 +131,9 @@ function goToPage(page: number) {
       <button
         :class="
           cn(
-            'p-1 rounded-lg border border-slate-200 dark:border-slate-700',
-            'hover:bg-white dark:hover:bg-slate-700 transition-colors',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
+            'rounded-lg border border-slate-200 p-1 dark:border-slate-700',
+            'transition-colors hover:bg-white dark:hover:bg-slate-700',
+            'disabled:cursor-not-allowed disabled:opacity-50',
           )
         "
         :disabled="currentPage >= totalPages"

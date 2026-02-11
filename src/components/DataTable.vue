@@ -51,8 +51,7 @@ const selectionColumn: ColumnDef<TData, unknown> = {
     h(AppCheckbox, {
       modelValue: table.getIsAllRowsSelected(),
       indeterminate: table.getIsSomeRowsSelected(),
-      'onUpdate:modelValue': (value: boolean) =>
-        table.toggleAllRowsSelected(value),
+      'onUpdate:modelValue': (value: boolean) => table.toggleAllRowsSelected(value),
     }),
   // 셀 체크박스 (개별 선택/해제)
   cell: ({ row }) =>
@@ -90,17 +89,13 @@ const table = useVueTable({
   },
   // 정렬 변경 핸들러
   onSortingChange: (updater) => {
-    sorting.value =
-      typeof updater === 'function' ? updater(sorting.value) : updater;
+    sorting.value = typeof updater === 'function' ? updater(sorting.value) : updater;
   },
   // 행 선택 변경 핸들러
   onRowSelectionChange: (updater) => {
-    rowSelection.value =
-      typeof updater === 'function' ? updater(rowSelection.value) : updater;
+    rowSelection.value = typeof updater === 'function' ? updater(rowSelection.value) : updater;
     // 부모 컴포넌트에 선택된 데이터 전달
-    const selectedRows = table
-      .getSelectedRowModel()
-      .rows.map((row) => row.original);
+    const selectedRows = table.getSelectedRowModel().rows.map((row) => row.original);
     emit('selectionChange', selectedRows);
   },
   getCoreRowModel: getCoreRowModel(), // 기본 행 모델
@@ -109,9 +104,7 @@ const table = useVueTable({
 });
 
 // 선택된 행 수 (Computed)
-const selectedRowCount = computed(
-  () => Object.keys(rowSelection.value).length,
-);
+const selectedRowCount = computed(() => Object.keys(rowSelection.value).length);
 
 // 외부에서 접근 가능한 API 노출
 defineExpose({
@@ -125,31 +118,24 @@ defineExpose({
     :class="
       cn(
         'bg-white dark:bg-slate-900',
-        'border border-slate-300 dark:border-slate-700 shadow-sm',
-        'flex flex-col h-full rounded-sm overflow-hidden',
+        'border border-slate-300 shadow-sm dark:border-slate-700',
+        'flex h-full flex-col overflow-hidden rounded-sm',
       )
     "
   >
     <!-- 테이블 스크롤 영역 -->
-    <div :class="cn('overflow-y-auto flex-1')">
-      <table
-        :class="
-          cn('w-full text-left border-collapse excel-table text-sm')
-        "
-      >
+    <div :class="cn('flex-1 overflow-y-auto')">
+      <table :class="cn('excel-table w-full border-collapse text-left text-sm')">
         <!-- 헤더 -->
         <thead :class="cn('sticky top-0 z-20 bg-slate-100 dark:bg-slate-800')">
-          <tr
-            v-for="headerGroup in table.getHeaderGroups()"
-            :key="headerGroup.id"
-          >
+          <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
             <th
               v-for="header in headerGroup.headers"
               :key="header.id"
               :class="
                 cn(
                   'px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300',
-                  'uppercase tracking-wider bg-slate-200/60 dark:bg-slate-800',
+                  'bg-slate-200/60 tracking-wider uppercase dark:bg-slate-800',
                   header.id === 'select' && 'w-10 text-center',
                 )
               "
@@ -176,7 +162,7 @@ defineExpose({
                   :class="
                     cn(
                       'flex items-center justify-between gap-1',
-                      'cursor-pointer hover:text-primary select-none',
+                      'hover:text-primary cursor-pointer select-none',
                     )
                   "
                   @click="header.column.getToggleSortingHandler()?.($event)"
@@ -205,10 +191,7 @@ defineExpose({
         <!-- 바디 -->
         <tbody
           :class="
-            cn(
-              'divide-y divide-slate-300 dark:divide-slate-700',
-              'bg-white dark:bg-slate-900',
-            )
+            cn('divide-y divide-slate-300 dark:divide-slate-700', 'bg-white dark:bg-slate-900')
           "
         >
           <tr
@@ -216,7 +199,7 @@ defineExpose({
             :key="row.id"
             :class="
               cn(
-                'hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group',
+                'group transition-colors hover:bg-slate-50 dark:hover:bg-slate-800',
                 row.getIsSelected() && 'bg-primary/5',
               )
             "
@@ -232,10 +215,7 @@ defineExpose({
                 )
               "
             >
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </td>
           </tr>
 
