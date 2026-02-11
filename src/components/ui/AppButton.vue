@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 const props = withDefaults(
   defineProps<{
     /** 버튼 변형 스타일 */
-    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'icon';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'icon' | 'outline';
     /** 버튼 크기 */
     size?: 'sm' | 'md' | 'lg';
     /** 비활성화 여부 */
@@ -35,6 +35,8 @@ const variantClasses = computed(() => {
       'bg-red-600 hover:bg-red-700 text-white shadow-sm',
     icon:
       'text-slate-400 hover:text-primary hover:bg-slate-200 dark:hover:bg-slate-700 rounded',
+    outline:
+      'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm',
   };
   return map[props.variant] || map.primary;
 });

@@ -24,6 +24,18 @@ const router = createRouter({
           name: 'user-management',
           component: () => import('../views/UserManagement.vue'),
         },
+        // 1-3. 권한 관리 페이지
+        {
+          path: 'permissions',
+          name: 'permission-management',
+          component: () => import('../views/PermissionManagement.vue'),
+        },
+        // 1-4. 메뉴 관리 페이지
+        {
+          path: 'menus',
+          name: 'menu-management',
+          component: () => import('../views/MenuManagement.vue'),
+        },
         // 1-3. 컴포넌트 데모 (개발용)
         // 데모 페이지도 대시보드 레이아웃 안에 포함시키고 싶다면 여기로 이동
         // 현재는 별도 레이아웃을 전제로 할 수 있으나, 일관성을 위해 일단 둠.
