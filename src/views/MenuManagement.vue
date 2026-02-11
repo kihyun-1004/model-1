@@ -20,8 +20,8 @@ import {
 // 컴포넌트 import
 import AppButton from '@/components/ui/AppButton.vue';
 import AppBadge from '@/components/ui/AppBadge.vue';
-import Breadcrumb, { type BreadcrumbItem } from '@/components/ui/Breadcrumb.vue';
-import PageHeader from '@/components/ui/PageHeader.vue';
+import AppBreadcrumb, { type BreadcrumbItem } from '@/components/ui/AppBreadcrumb.vue';
+import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import IconPickerModal from '@/components/ui/IconPickerModal.vue';
 import { iconMap } from '@/utils/icons';
 
@@ -255,11 +255,11 @@ function handleIconSelected(iconName: string) {
   <div :class="cn('bg-background-light dark:bg-background-dark flex min-h-0 flex-1 flex-col')">
     <!-- 헤더 영역 -->
     <div :class="cn('shrink-0 px-6 pt-6 pb-2')">
-      <PageHeader title="Menu Management">
+      <AppPageHeader title="Menu Management">
         <template #breadcrumb>
-          <Breadcrumb :items="breadcrumbItems" />
+          <AppBreadcrumb :items="breadcrumbItems" />
         </template>
-      </PageHeader>
+      </AppPageHeader>
     </div>
 
     <!-- 메인 컨텐츠 (좌우 분할) -->

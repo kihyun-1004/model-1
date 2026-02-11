@@ -11,12 +11,12 @@ import AppInput from '@/components/ui/AppInput.vue';
 import AppSelect from '@/components/ui/AppSelect.vue';
 
 // Phase 2: Molecule 컴포넌트
-import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import type { BreadcrumbItem } from '@/components/ui/Breadcrumb.vue';
-import PageHeader from '@/components/ui/PageHeader.vue';
-import Pagination from '@/components/ui/Pagination.vue';
-import FilterPanel from '@/components/ui/FilterPanel.vue';
-import BulkActionBar from '@/components/ui/BulkActionBar.vue';
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue';
+import type { BreadcrumbItem } from '@/components/ui/AppBreadcrumb.vue';
+import AppPageHeader from '@/components/ui/AppPageHeader.vue';
+import AppPagination from '@/components/ui/AppPagination.vue';
+import AppFilterPanel from '@/components/ui/AppFilterPanel.vue';
+import AppBulkActionBar from '@/components/ui/AppBulkActionBar.vue';
 
 // lucide-vue-next 아이콘
 import {
@@ -189,9 +189,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
             )
           "
         >
-          <PageHeader title="User Management">
+          <AppPageHeader title="User Management">
             <template #breadcrumb>
-              <Breadcrumb :items="breadcrumbItems" />
+              <AppBreadcrumb :items="breadcrumbItems" />
             </template>
             <template #actions>
               <AppButton variant="primary">
@@ -199,14 +199,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 <span>Add New User</span>
               </AppButton>
             </template>
-          </PageHeader>
+          </AppPageHeader>
         </div>
       </section>
 
       <!-- 필터 패널 -->
       <section :class="cn('space-y-4')">
-        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">FilterPanel</h3>
-        <FilterPanel>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppFilterPanel</h3>
+        <AppFilterPanel>
           <div :class="cn('flex w-full flex-col items-end gap-4 md:flex-row')">
             <div :class="cn('flex w-full flex-col gap-1.5 md:w-64')">
               <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
@@ -236,13 +236,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
               </AppButton>
             </div>
           </div>
-        </FilterPanel>
+        </AppFilterPanel>
       </section>
 
       <!-- 벌크 액션 바 -->
       <section :class="cn('space-y-4')">
-        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">BulkActionBar</h3>
-        <BulkActionBar :selected-count="selectedCount" @delete="selectedCount = 0">
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppBulkActionBar</h3>
+        <AppBulkActionBar :selected-count="selectedCount" @delete="selectedCount = 0">
           <template #actions>
             <AppButton variant="ghost">
               <Download :class="cn('size-4')" />
@@ -253,12 +253,12 @@ const breadcrumbItems: BreadcrumbItem[] = [
               <span>Change Status</span>
             </AppButton>
           </template>
-        </BulkActionBar>
+        </AppBulkActionBar>
       </section>
 
       <!-- 페이지네이션 -->
       <section :class="cn('space-y-4')">
-        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">Pagination</h3>
+        <h3 :class="cn('text-xl font-semibold text-slate-800 dark:text-white')">AppPagination</h3>
         <div
           :class="
             cn(
@@ -266,7 +266,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
             )
           "
         >
-          <Pagination
+          <AppPagination
             v-model:current-page="currentPage"
             :total-pages="10"
             :total-items="120"

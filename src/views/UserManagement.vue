@@ -14,18 +14,18 @@ import {
 } from 'lucide-vue-next';
 
 // 컴포넌트 import
-import DataTable from '@/components/DataTable.vue';
+import AppDataTable from '@/components/AppDataTable.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 import AppBadge from '@/components/ui/AppBadge.vue';
 import AppAvatar from '@/components/ui/AppAvatar.vue';
 import AppInput from '@/components/ui/AppInput.vue';
 import AppSelect from '@/components/ui/AppSelect.vue';
-import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import type { BreadcrumbItem } from '@/components/ui/Breadcrumb.vue';
-import PageHeader from '@/components/ui/PageHeader.vue';
-import Pagination from '@/components/ui/Pagination.vue';
-import FilterPanel from '@/components/ui/FilterPanel.vue';
-import BulkActionBar from '@/components/ui/BulkActionBar.vue';
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue';
+import type { BreadcrumbItem } from '@/components/ui/AppBreadcrumb.vue';
+import AppPageHeader from '@/components/ui/AppPageHeader.vue';
+import AppPagination from '@/components/ui/AppPagination.vue';
+import AppFilterPanel from '@/components/ui/AppFilterPanel.vue';
+import AppBulkActionBar from '@/components/ui/AppBulkActionBar.vue';
 
 // ===== 타입 정의 (Mock Data용) =====
 type UserStatus = 'active' | 'inactive' | 'pending';
@@ -95,8 +95,9 @@ function handleBulkDelete() {
  * 수정 핸들러 (Mock)
  */
 function handleEdit() {
-  if (selectedRows.value.length !== 1) return;
-  alert(`Editing user: ${selectedRows.value[0].name}`);
+  const selectedUser = selectedRows.value[0];
+  if (!selectedUser) return;
+  alert(`Editing user: ${selectedUser.name}`);
 }
 
 /**
@@ -306,9 +307,9 @@ const filteredUsers = computed(() => {
     <!-- 상단: 브레드크럼 + 헤더 + 필터 -->
     <div :class="cn('shrink-0 p-8 pb-0')">
       <!-- 페이지 헤더 -->
-      <PageHeader title="User Management">
+      <AppPageHeader title="User Management">
         <template #breadcrumb>
-          <Breadcrumb :items="breadcrumbItems" />
+          <AppBreadcrumb :items="breadcrumbItems" />
         </template>
 
         <template #actions>
@@ -334,11 +335,11 @@ const filteredUsers = computed(() => {
             <span>Add</span>
           </AppButton>
         </template>
-      </PageHeader>
+      </AppPageHeader>
 
       <!-- 필터 패널 -->
       <div :class="cn('mb-6')">
-        <FilterPanel>
+        <AppFilterPanel>
           <div :class="cn('flex w-full flex-col items-end gap-4 md:flex-row')">
             <!-- 검색 입력 -->
             <div :class="cn('flex w-full flex-col gap-1.5 md:w-64')">
@@ -434,12 +435,12 @@ const filteredUsers = computed(() => {
               </button>
             </div>
           </div>
-        </FilterPanel>
+        </AppFilterPanel>
       </div>
 
       <!-- 벌크 액션 바 (행 선택 시 활성화) -->
       <div :class="cn('mb-4')">
-        <BulkActionBar :selected-count="selectedRows.length" @delete="handleBulkDelete">
+        <AppBulkActionBar :selected-count="selectedRows.length" @delete="handleBulkDelete">
           <template #actions>
             <AppButton variant="ghost">
               <Download :class="cn('size-4')" />
@@ -450,27 +451,27 @@ const filteredUsers = computed(() => {
               <span>Change Status</span>
             </AppButton>
           </template>
-        </BulkActionBar>
+        </AppBulkActionBar>
       </div>
     </div>
 
     <!-- 테이블 영역 -->
     <div :class="cn('flex min-h-0 flex-1 flex-col overflow-hidden px-8 pb-4')">
-      <DataTable
+      <AppDataTable
         :columns="columns"
         :data="filteredUsers"
         enable-selection
         @selection-change="handleSelectionChange"
       >
         <template #footer>
-          <Pagination
+          <AppPagination
             v-model:current-page="currentPage"
             :total-pages="10"
             :total-items="120"
             :page-size="12"
           />
         </template>
-      </DataTable>
+      </AppDataTable>
     </div>
   </div>
 </template>

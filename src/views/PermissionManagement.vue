@@ -19,9 +19,9 @@ import {
 // 컴포넌트 import
 import AppButton from '@/components/ui/AppButton.vue';
 import AppBadge from '@/components/ui/AppBadge.vue';
-import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import type { BreadcrumbItem } from '@/components/ui/Breadcrumb.vue';
-import PageHeader from '@/components/ui/PageHeader.vue';
+import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue';
+import type { BreadcrumbItem } from '@/components/ui/AppBreadcrumb.vue';
+import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 
 // ===== 타입 정의 =====
 type RoleStatus = 'active' | 'inactive';
@@ -219,9 +219,9 @@ selectRole(1);
   <div :class="cn('bg-background-light dark:bg-background-dark flex min-h-0 flex-1 flex-col')">
     <!-- 헤더 영역 -->
     <div :class="cn('shrink-0 px-6 pt-6 pb-2')">
-      <PageHeader title="Role Management">
+      <AppPageHeader title="Role Management">
         <template #breadcrumb>
-          <Breadcrumb :items="breadcrumbItems" />
+          <AppBreadcrumb :items="breadcrumbItems" />
         </template>
         <template #actions>
           <AppButton variant="outline">
@@ -233,7 +233,7 @@ selectRole(1);
             <span>Copy Role</span>
           </AppButton>
         </template>
-      </PageHeader>
+      </AppPageHeader>
     </div>
 
     <!-- 메인 컨텐츠 (좌우 분할) -->
