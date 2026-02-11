@@ -1,5 +1,143 @@
+/* 폰트 임포트 (Pretendard는 index.html에서 CDN으로 로드) */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'); */
+/* JetBrains Mono만 유지 (필요 시) */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
 @import 'tailwindcss';
+
+/* 디자인 토큰 */
 @theme {
-  --color-brand: #3b82f6;
-  --font-sans: 'Pretendard', ui-sans-serif, system-ui;
+  --color-primary: #137fec;
+  --color-background-light: #f6f7f8;
+  --color-background-dark: #101922;
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* 다크모드 수동 토글 지원 (Class Strategy) */
+@variant dark (&:where(.dark, .dark *));
+
+/* 브라우저 네이티브 컨트롤(스크롤바, 데이트피커 등) 다크모드 지원 */
+.dark {
+  color-scheme: dark;
+}
+
+/* 테마 전환 애니메이션 (JS로 클래스 제어) */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease, stroke 0.3s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* 커스텀 체크박스 */
+.custom-checkbox {
+  appearance: none;
+  background-color: #fff;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 2px solid #cbd5e1;
+  border-radius: 0.25em;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.dark .custom-checkbox {
+  background-color: #1e293b;
+  border-color: #475569;
+}
+
+.custom-checkbox::before {
+  content: '';
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em white;
+  transform-origin: center;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.custom-checkbox:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.custom-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.custom-checkbox:indeterminate {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.custom-checkbox:indeterminate::before {
+  transform: scale(1);
+  clip-path: inset(40% 0 40% 0);
+}
+
+/* 엑셀 스타일 테이블 (미니멀 + 구분선 강화) */
+.excel-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.excel-table th {
+  border-bottom: 2px solid #cbd5e1; /* slate-300: 헤더 구분 강조 */
+  border-right: 1px solid #e2e8f0; /* slate-200: 세로선 부활 (연하게) */
+}
+
+.excel-table th:last-child {
+  border-right: none;
+}
+
+.dark .excel-table th {
+  border-bottom-color: #475569; /* slate-600 */
+  border-right-color: #334155; /* slate-700 */
+}
+
+.excel-table td {
+  border-bottom: 1px solid #e2e8f0; /* slate-200: 행 구분 명확화 */
+  border-right: 1px solid #e2e8f0; /* slate-200: 셀 구분 명확화 */
+}
+
+.excel-table td:last-child {
+  border-right: none;
+}
+
+.dark .excel-table td {
+  border-color: #334155; /* slate-700 */
+}
+
+/* 헤더 상단 보더 제거 불필요 */
+
+.excel-table thead.sticky th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.excel-table tbody tr:hover td {
+  background-color: #f8fafc;
+}
+
+.dark .excel-table tbody tr:hover td {
+  background-color: #1e293b;
+}
+
+/* 스크롤바 숨김 유틸리티 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
