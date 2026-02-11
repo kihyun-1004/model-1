@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, type Component } from 'vue';
+import { ref, computed } from 'vue';
 import { cn } from '@/lib/utils';
 import {
+  Save,
   Search,
   Plus,
-  Save,
-  Copy,
-  FileDown, // Export 대신 사용
   Shield,
-  LayoutDashboard, // Dashboard icon
-  Users, // Users icon
-  Settings, // Settings icon
-  BarChart, // Reports icon
+  Copy,
+  FileDown,
+  LayoutDashboard,
+  Users,
+  Settings,
+  BarChart,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-vue-next';
 
 // 컴포넌트 import
@@ -34,10 +36,9 @@ interface Role {
 }
 
 interface MenuPermission {
-  id: string;
-  name: string;
-  icon?: Component; // Lucide icon component
-  level: number; // 0: root, 1: child
+  id: string; // Menu ID
+  name: string; // Menu Name
+  level: number;
   hasChildren: boolean;
   expanded?: boolean;
   permissions: {
@@ -56,25 +57,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
   { label: 'Role Management' },
 ];
 
-// ===== 상태 관리 =====
-const searchQuery = ref('');
-const selectedRoleId = ref<number>(1);
-
-// ===== Mock Data: 역할 목록 =====
+// ===== Data: Roles =====
 const roles = ref<Role[]>([
-  {
-    id: 1,
-    code: 'ADM',
-    name: 'Admin',
-    description: 'Full system access and management capabilities.',
-    sortOrder: 1,
-    status: 'active',
-  },
+  { id: 1, code: 'ADM', name: 'Admin', description: 'Full system access.', sortOrder: 1, status: 'active' },
   {
     id: 2,
     code: 'EDT',
     name: 'Editor',
-    description: 'Can edit content but cannot manage users.',
+    description: 'Can edit content.',
     sortOrder: 2,
     status: 'active',
   },
@@ -82,93 +72,91 @@ const roles = ref<Role[]>([
     id: 3,
     code: 'VIW',
     name: 'Viewer',
-    description: 'Read-only access to all content.',
+    description: 'Read-only access.',
     sortOrder: 3,
     status: 'active',
   },
-  {
-    id: 4,
-    code: 'GST',
-    name: 'Guest',
-    description: 'Limited access to public content.',
-    sortOrder: 4,
-    status: 'inactive',
-  },
+  { id: 4, code: 'GST', name: 'Guest', description: 'Limited access.', sortOrder: 4, status: 'inactive' },
 ]);
 
-// ===== Mock Data: 메뉴 권한 구조 =====
-// 실제로는 API에서 역할별 권한을 로드해야 함. 여기서는 데모용으로 정적 구조 사용.
-const menuPermissions = ref<MenuPermission[]>([
+// ===== Data: Menu Permissions Structure (Template) =====
+// 실제로는 선택된 Role에 따라 API에서 권한 목록을 로드해야 함.
+// 여기서는 초기 mock 데이터를 정의하고, Role 선택 시 이를 복사하여 사용하는 방식 시뮬레이션.
+const initialMenuPermissions: MenuPermission[] = [
   {
     id: 'dashboard',
     name: 'Dashboard',
-    icon: LayoutDashboard,
     level: 0,
     hasChildren: false,
-    permissions: { read: true, create: false, update: false, delete: false, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'analytics',
     name: 'Analytics Overview',
     level: 1,
-    hasChildren: true, // 트리 구조 시각화용
+    hasChildren: true,
     expanded: true,
-    permissions: { read: true, create: false, update: false, delete: false, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'users',
     name: 'Users Management',
-    icon: Users,
     level: 0,
     hasChildren: true,
     expanded: true,
-    permissions: { read: true, create: true, update: true, delete: true, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'users_list',
     name: 'All Users List',
     level: 1,
     hasChildren: false,
-    permissions: { read: true, create: true, update: true, delete: true, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'roles',
     name: 'Role Management',
     level: 1,
     hasChildren: false,
-    permissions: { read: true, create: true, update: true, delete: true, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'audit',
     name: 'Permissions Audit',
     level: 1,
     hasChildren: false,
-    permissions: { read: true, create: false, update: false, delete: false, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'settings',
     name: 'System Settings',
-    icon: Settings,
     level: 0,
     hasChildren: false,
-    permissions: { read: true, create: false, update: true, delete: false, export: false },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
   {
     id: 'reports',
     name: 'Reports Center',
-    icon: BarChart,
     level: 0,
     hasChildren: false,
-    permissions: { read: true, create: true, update: false, delete: false, export: true },
+    permissions: { read: false, create: false, update: false, delete: false, export: false },
   },
-]);
+];
+
+// ===== State =====
+const searchQuery = ref('');
+const selectedRoleId = ref<number>(1);
+// 선택된 역할의 권한 데이터 (Deep Copy로 독립성 유지)
+const currentPermissions = ref<MenuPermission[]>(
+  JSON.parse(JSON.stringify(initialMenuPermissions)),
+);
 
 // ===== Computed =====
 const filteredRoles = computed(() => {
   if (!searchQuery.value) return roles.value;
   const query = searchQuery.value.toLowerCase();
   return roles.value.filter(
-    (role) => role.name.toLowerCase().includes(query) || role.code.toLowerCase().includes(query),
+    (r) => r.name.toLowerCase().includes(query) || r.code.toLowerCase().includes(query),
   );
 });
 
@@ -176,24 +164,55 @@ const selectedRole = computed(() => {
   return roles.value.find((r) => r.id === selectedRoleId.value);
 });
 
-// ===== 메서드 =====
+// ===== Methods =====
 function selectRole(id: number) {
   selectedRoleId.value = id;
-  // TODO: 실제 구현 시 여기서 해당 역할의 권한 데이터를 API로 불러와야 함
-  console.log(`Role ${id} selected. Fetching permissions...`);
+  // Mock: Role 변경 시 권한 데이터 로드 (실제론 API 호출)
+  // 여기서는 Admin이면 전부 True, 그 외는 랜덤/초기화 등으로 시뮬레이션
+  console.log(`Loading permissions for Role ID: ${id}`);
+
+  // 데이터 리셋 및 모의 로드
+  const newPermissions = JSON.parse(JSON.stringify(initialMenuPermissions));
+  if (id === 1) {
+    // Admin: Full Access
+    newPermissions.forEach((m: MenuPermission) => {
+      m.permissions = { read: true, create: true, update: true, delete: true, export: true };
+    });
+  } else if (id === 3 || id === 4) {
+    // Viewer/Guest: Read Only
+    newPermissions.forEach((m: MenuPermission) => {
+      m.permissions = {
+        read: true,
+        create: false,
+        update: false,
+        delete: false,
+        export: id === 3,
+      };
+    });
+  }
+  currentPermissions.value = newPermissions;
 }
 
 function handleSave() {
-  alert(`Changes saved for role: ${selectedRole.value?.name}`);
+  alert(`Permissions saved for ${selectedRole.value?.name}`);
 }
 
 function handleAddRole() {
-  alert('Create New Role Modal Open');
+  alert('Open Create Role Modal');
 }
 
-function getStatusBadgeVariant(status: RoleStatus) {
+function getStatusVariant(status: RoleStatus) {
   return status === 'active' ? 'success' : 'default';
 }
+
+function toggleExpand(menu: MenuPermission) {
+  if (menu.hasChildren) {
+    menu.expanded = !menu.expanded;
+  }
+}
+
+// 초기 로드 시 Admin 권한 세팅
+selectRole(1);
 </script>
 
 <template>
@@ -205,17 +224,11 @@ function getStatusBadgeVariant(status: RoleStatus) {
           <Breadcrumb :items="breadcrumbItems" />
         </template>
         <template #actions>
-          <AppButton
-            variant="outline"
-            class="border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800"
-          >
+          <AppButton variant="outline">
             <FileDown :class="cn('mr-2 size-4')" />
             <span>Export</span>
           </AppButton>
-          <AppButton
-            variant="outline"
-            class="border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800"
-          >
+          <AppButton variant="outline">
             <Copy :class="cn('mr-2 size-4')" />
             <span>Copy Role</span>
           </AppButton>
@@ -242,7 +255,9 @@ function getStatusBadgeVariant(status: RoleStatus) {
           "
         >
           <div :class="cn('relative')">
-            <Search :class="cn('absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400')" />
+            <Search
+              :class="cn('absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400')"
+            />
             <input
               v-model="searchQuery"
               :class="
@@ -256,7 +271,7 @@ function getStatusBadgeVariant(status: RoleStatus) {
           </div>
         </div>
 
-        <!-- 목록 -->
+        <!-- 목록 테이블 -->
         <div :class="cn('flex-1 overflow-y-auto')">
           <table :class="cn('w-full text-sm')">
             <thead
@@ -288,7 +303,11 @@ function getStatusBadgeVariant(status: RoleStatus) {
                 <th :class="cn('bg-slate-200/50 px-3 py-2 text-left dark:bg-slate-800/80')">
                   Name
                 </th>
-                <th :class="cn('w-20 bg-slate-200/50 px-3 py-2 text-center dark:bg-slate-800/80')">
+                <th
+                  :class="
+                    cn('w-20 bg-slate-200/50 px-3 py-2 text-center dark:bg-slate-800/80')
+                  "
+                >
                   Status
                 </th>
               </tr>
@@ -310,7 +329,12 @@ function getStatusBadgeVariant(status: RoleStatus) {
                 <td :class="cn('px-3 py-3 text-center text-slate-500')">{{ index + 1 }}</td>
                 <td
                   :class="
-                    cn('px-3 py-3 font-mono text-xs font-bold text-slate-600 dark:text-slate-400')
+                    cn(
+                      'px-3 py-3 font-mono text-xs font-bold',
+                      selectedRoleId === role.id
+                        ? 'text-primary'
+                        : 'text-slate-600 dark:text-slate-400',
+                    )
                   "
                 >
                   {{ role.code }}
@@ -320,7 +344,7 @@ function getStatusBadgeVariant(status: RoleStatus) {
                 </td>
                 <td :class="cn('px-3 py-3 text-center')">
                   <AppBadge
-                    :variant="getStatusBadgeVariant(role.status)"
+                    :variant="getStatusVariant(role.status)"
                     :class="cn('px-1.5 py-0.5 text-[10px]')"
                   >
                     {{ role.status.toUpperCase() }}
@@ -355,14 +379,15 @@ function getStatusBadgeVariant(status: RoleStatus) {
 
       <!-- 우측 패널: 상세 정보 및 권한 매핑 -->
       <div
+        v-if="selectedRole"
         :class="
           cn(
             'relative flex flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900',
           )
         "
       >
-        <div v-if="selectedRole" :class="cn('shrink-0 p-6 pb-0')">
-          <!-- 타이틀 및 액션 -->
+        <!-- 상세 정보 폼 -->
+        <div :class="cn('shrink-0 p-6 pb-0')">
           <div :class="cn('mb-6 flex items-center justify-between')">
             <h2
               :class="
@@ -384,263 +409,308 @@ function getStatusBadgeVariant(status: RoleStatus) {
             </button>
           </div>
 
-          <!-- 폼 그리드 -->
-          <div :class="cn('mb-8 grid grid-cols-1 gap-6 md:grid-cols-2')">
-            <div>
-              <label
-                :class="cn('mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300')"
-                >Role Name</label
-              >
+          <div :class="cn('mb-6 grid grid-cols-4 gap-6')">
+            <div :class="cn('flex flex-col gap-1.5')">
+              <label :class="cn('text-xs font-bold text-slate-500 uppercase')">Role Code</label>
+              <input
+                v-model="selectedRole.code"
+                type="text"
+                readonly
+                :class="
+                  cn(
+                    'w-full cursor-not-allowed rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-800',
+                  )
+                "
+              />
+            </div>
+            <div :class="cn('flex flex-col gap-1.5')">
+              <label :class="cn('text-xs font-bold text-slate-500 uppercase')">Role Name</label>
               <input
                 v-model="selectedRole.name"
                 type="text"
                 :class="
                   cn(
-                    'focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm transition-colors outline-none focus:ring-1 dark:border-slate-700 dark:bg-slate-900',
+                    'focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm outline-none focus:ring-1 dark:border-slate-700 dark:bg-slate-800',
                   )
                 "
               />
             </div>
-            <div>
-              <label
-                :class="cn('mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300')"
-                >Role Code</label
-              >
+            <div :class="cn('flex flex-col gap-1.5')">
+              <label :class="cn('text-xs font-bold text-slate-500 uppercase')">Sort Order</label>
               <input
-                v-model="selectedRole.code"
-                type="text"
+                v-model="selectedRole.sortOrder"
+                type="number"
                 :class="
                   cn(
-                    'w-full cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 font-mono text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-800',
+                    'focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 font-mono text-sm outline-none focus:ring-1 dark:border-slate-700 dark:bg-slate-800',
                   )
                 "
-                readonly
               />
             </div>
-            <div :class="cn('md:col-span-2')">
-              <label
-                :class="cn('mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300')"
-                >Description</label
-              >
+            <div :class="cn('flex flex-col gap-1.5')">
+              <label :class="cn('text-xs font-bold text-slate-500 uppercase')">Status</label>
+              <label :class="cn('mt-1 inline-flex cursor-pointer items-center')">
+                <input
+                  type="checkbox"
+                  :checked="selectedRole.status === 'active'"
+                  @change="
+                    selectedRole.status = ($event.target as HTMLInputElement).checked
+                      ? 'active'
+                      : 'inactive'
+                  "
+                  :class="cn('peer sr-only')"
+                />
+                <div
+                  :class="
+                    cn(
+                      'peer peer-checked:bg-primary relative h-6 w-11 rounded-full bg-slate-200 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[\'\'] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-slate-700',
+                    )
+                  "
+                ></div>
+                <span :class="cn('ms-3 text-sm font-medium text-slate-700 dark:text-slate-300')">
+                  {{ selectedRole.status === 'active' ? 'Active' : 'Inactive' }}
+                </span>
+              </label>
+            </div>
+            <div :class="cn('col-span-4 flex flex-col gap-1.5')">
+              <label :class="cn('text-xs font-bold text-slate-500 uppercase')">Description</label>
               <textarea
                 v-model="selectedRole.description"
                 rows="2"
                 :class="
                   cn(
-                    'focus:ring-primary focus:border-primary w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm transition-colors outline-none focus:ring-1 dark:border-slate-700 dark:bg-slate-900',
+                    'focus:ring-primary focus:border-primary w-full resize-none rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm outline-none focus:ring-1 dark:border-slate-700 dark:bg-slate-800',
                   )
                 "
               ></textarea>
             </div>
           </div>
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-slate-500 uppercase">Status</label>
-            <label class="mt-1 inline-flex cursor-pointer items-center">
-              <input
-                type="checkbox"
-                :checked="selectedRole.status === 'active'"
-                class="peer sr-only"
-              />
-              <div
-                class="peer peer-checked:bg-primary relative h-6 w-11 rounded-full bg-slate-200 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-slate-700"
-              ></div>
-              <span class="ms-3 text-sm font-medium text-slate-700 dark:text-slate-300">
-                {{ selectedRole.status === 'active' ? 'Active' : 'Inactive' }}
-              </span>
-            </label>
-          </div>
-          <div class="col-span-4 flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-slate-500 uppercase">Description</label>
-            <textarea
-              :value="selectedRole.description"
-              class="focus:ring-primary focus:border-primary w-full resize-none rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm outline-none focus:ring-1 dark:border-slate-700 dark:bg-slate-800"
-              rows="2"
-            ></textarea>
-          </div>
         </div>
-      </div>
 
-      <!-- 메뉴 권한 테이블 -->
-      <div :class="cn('flex flex-1 flex-col overflow-hidden px-6 pb-20')">
-        <div
-          :class="
-            cn(
-              'flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 shadow-sm dark:border-slate-700',
-            )
-          "
-        >
-          <!-- 테이블 헤더 -->
+        <!-- 메뉴 권한 테이블 -->
+        <div :class="cn('flex flex-1 flex-col overflow-hidden px-6 pb-20')">
           <div
             :class="
               cn(
-                'flex shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-800/50',
+                'flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 shadow-sm dark:border-slate-700',
               )
             "
           >
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200">
-              Menu Permissions Mapping
-            </h3>
-            <div class="flex items-center gap-4 text-xs font-bold text-slate-400">
-              <span class="flex items-center gap-1"
-                ><span class="h-2 w-2 rounded-full bg-blue-500"></span> R: Read</span
-              >
-              <span class="flex items-center gap-1"
-                ><span class="h-2 w-2 rounded-full bg-blue-500"></span> C: Create</span
-              >
-              <span class="flex items-center gap-1"
-                ><span class="h-2 w-2 rounded-full bg-blue-500"></span> U: Update</span
-              >
-              <span class="flex items-center gap-1"
-                ><span class="h-2 w-2 rounded-full bg-blue-500"></span> D: Delete</span
-              >
-              <span class="flex items-center gap-1"
-                ><span class="h-2 w-2 rounded-full bg-blue-500"></span> E: Excel</span
-              >
+            <!-- 테이블 헤더 -->
+            <div
+              :class="
+                cn(
+                  'flex shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-800/50',
+                )
+              "
+            >
+              <h3 :class="cn('text-sm font-bold text-slate-700 dark:text-slate-200')">
+                Menu Permissions Mapping
+              </h3>
+              <div :class="cn('flex items-center gap-4 text-xs font-bold text-slate-400')">
+                <span :class="cn('flex items-center gap-1')"
+                  ><span :class="cn('bg-primary h-2 w-2 rounded-full')"></span> R: Read</span
+                >
+                <span :class="cn('flex items-center gap-1')"
+                  ><span :class="cn('bg-primary h-2 w-2 rounded-full')"></span> C: Create</span
+                >
+                <span :class="cn('flex items-center gap-1')"
+                  ><span :class="cn('bg-primary h-2 w-2 rounded-full')"></span> U: Update</span
+                >
+                <span :class="cn('flex items-center gap-1')"
+                  ><span :class="cn('bg-primary h-2 w-2 rounded-full')"></span> D: Delete</span
+                >
+                <span :class="cn('flex items-center gap-1')"
+                  ><span :class="cn('bg-primary h-2 w-2 rounded-full')"></span> E: Excel</span
+                >
+              </div>
             </div>
-          </div>
 
-          <!-- 스크롤 가능한 테이블 영역 -->
-          <div class="flex-1 overflow-y-auto">
-            <table class="w-full border-separate border-spacing-0 text-sm">
-              <thead class="sticky top-0 z-10 bg-slate-100 dark:bg-slate-800">
-                <tr>
-                  <th
-                    class="border-b border-slate-200 bg-slate-200/50 px-4 py-2 text-left font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400"
-                  >
-                    Menu Name
-                  </th>
-                  <!-- 권한 체크박스 헤더 (전체 선택용) -->
-                  <th
-                    v-for="type in ['read', 'create', 'update', 'delete', 'export']"
-                    :key="type"
-                    class="w-16 border-b border-slate-200 bg-slate-200/50 px-2 py-2 text-center text-[10px] font-bold text-slate-600 uppercase dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400"
-                  >
-                    {{ type.charAt(0) }}
-                    <!-- 헤더 체크박스 생략 (구현 복잡도 완화) -->
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                class="divide-y divide-slate-100 bg-white dark:divide-slate-800 dark:bg-slate-900"
-              >
-                <tr
-                  v-for="menu in menuPermissions"
-                  :key="menu.id"
+            <!-- 스크롤 가능한 테이블 영역 -->
+            <div :class="cn('flex-1 overflow-y-auto')">
+              <table :class="cn('w-full border-separate border-spacing-0 text-sm')">
+                <thead :class="cn('sticky top-0 z-10 bg-slate-100 dark:bg-slate-800')">
+                  <tr>
+                    <th
+                      :class="
+                        cn(
+                          'border-b border-slate-200 bg-slate-200/50 px-4 py-2 text-left font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400',
+                        )
+                      "
+                    >
+                      Menu Name
+                    </th>
+                    <th
+                      v-for="h in ['R', 'C', 'U', 'D', 'E']"
+                      :key="h"
+                      :class="
+                        cn(
+                          'w-16 border-b border-slate-200 bg-slate-200/50 px-2 py-2 text-center font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400',
+                        )
+                      "
+                    >
+                      {{ h }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
                   :class="
-                    cn(
-                      'transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40',
-                      menu.level === 0 ? 'bg-slate-50/50 dark:bg-slate-800/20' : '',
-                    )
+                    cn('divide-y divide-slate-100 bg-white dark:divide-slate-800 dark:bg-slate-900')
                   "
                 >
-                  <!-- 메뉴 이름 (트리 구조) -->
-                  <td class="px-4 py-2">
-                    <div
-                      class="flex h-full items-center"
-                      :style="{ paddingLeft: `${menu.level * 20}px` }"
-                    >
-                      <!-- 트리 라인 (가상) - 아이콘으로 대체 -->
-                      <component
-                        v-if="menu.icon"
-                        :is="menu.icon"
-                        :class="cn('text-primary mr-2 size-4', menu.level > 0 && 'opacity-70')"
-                      />
-                      <div v-else :class="cn('mr-2 flex size-4 items-center justify-center')">
-                        <div
-                          :class="cn('h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600')"
-                        ></div>
-                      </div>
-
-                      <span
-                        :class="
-                          cn(
-                            'text-slate-700 dark:text-slate-300',
-                            menu.level === 0 ? 'font-bold' : 'font-normal',
-                          )
-                        "
+                  <tr
+                    v-for="menu in currentPermissions"
+                    :key="menu.id"
+                    :class="
+                      cn(
+                        'transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40',
+                        menu.level === 0 ? 'bg-slate-50/50 dark:bg-slate-800/20' : '',
+                      )
+                    "
+                  >
+                    <!-- 트리 구조 이름 -->
+                    <td :class="cn('px-4 py-2')">
+                      <div
+                        :class="cn('flex h-full items-center')"
+                        :style="{ paddingLeft: `${menu.level * 20}px` }"
                       >
-                        {{ menu.name }}
-                      </span>
-                    </div>
-                  </td>
-                  <!-- 권한 체크박스들 -->
-                  <td :class="cn('px-2 py-2 text-center')">
-                    <input
-                      type="checkbox"
-                      v-model="menu.permissions.read"
-                      :class="cn('text-primary focus:ring-primary size-4 rounded border-slate-300')"
-                    />
-                  </td>
-                  <td :class="cn('px-2 py-2 text-center')">
-                    <input
-                      type="checkbox"
-                      v-model="menu.permissions.create"
-                      :class="cn('text-primary focus:ring-primary size-4 rounded border-slate-300')"
-                    />
-                  </td>
-                  <td :class="cn('px-2 py-2 text-center')">
-                    <input
-                      type="checkbox"
-                      v-model="menu.permissions.update"
-                      :class="cn('text-primary focus:ring-primary size-4 rounded border-slate-300')"
-                    />
-                  </td>
-                  <td :class="cn('px-2 py-2 text-center')">
-                    <input
-                      type="checkbox"
-                      v-model="menu.permissions.delete"
-                      :class="cn('text-primary focus:ring-primary size-4 rounded border-slate-300')"
-                    />
-                  </td>
-                  <td :class="cn('px-2 py-2 text-center')">
-                    <input
-                      type="checkbox"
-                      v-model="menu.permissions.export"
-                      :class="cn('text-primary focus:ring-primary size-4 rounded border-slate-300')"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                        <div
+                          v-if="menu.hasChildren"
+                          @click="toggleExpand(menu)"
+                          :class="
+                            cn(
+                              'mr-1 cursor-pointer rounded p-0.5 hover:bg-slate-200 dark:hover:bg-slate-700',
+                            )
+                          "
+                        >
+                          <component
+                            :is="menu.expanded ? ChevronDown : ChevronRight"
+                            :class="cn('size-4 text-slate-500')"
+                          />
+                        </div>
+                        <div v-else :class="cn('mr-1 w-5')"></div>
+
+                        <!-- 아이콘: Level 0일 때만 표시 -->
+                        <component
+                          v-if="menu.level === 0"
+                          :is="
+                            menu.id === 'dashboard'
+                              ? LayoutDashboard
+                              : menu.id === 'users'
+                                ? Users
+                                : menu.id === 'settings'
+                                  ? Settings
+                                  : menu.id === 'analytics'
+                                    ? BarChart
+                                    : Shield
+                          "
+                          :class="cn('text-primary mr-2 size-4')"
+                        />
+                        <div
+                          v-else
+                          :class="
+                            cn('mr-2 h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600')
+                          "
+                        ></div>
+
+                        <span
+                          :class="
+                            cn(
+                              'text-slate-700 dark:text-slate-300',
+                              menu.level === 0 ? 'font-bold' : 'font-normal',
+                            )
+                          "
+                        >
+                          {{ menu.name }}
+                        </span>
+                      </div>
+                    </td>
+
+                    <!-- 권한 체크박스들 -->
+                    <td :class="cn('bg-inherit text-center')">
+                      <input
+                        type="checkbox"
+                        v-model="menu.permissions.read"
+                        :class="
+                          cn('focus:ring-primary size-4 rounded border-slate-300 text-primary')
+                        "
+                      />
+                    </td>
+                    <td :class="cn('bg-inherit text-center')">
+                      <input
+                        type="checkbox"
+                        v-model="menu.permissions.create"
+                        :class="
+                          cn('focus:ring-primary size-4 rounded border-slate-300 text-primary')
+                        "
+                      />
+                    </td>
+                    <td :class="cn('bg-inherit text-center')">
+                      <input
+                        type="checkbox"
+                        v-model="menu.permissions.update"
+                        :class="
+                          cn('focus:ring-primary size-4 rounded border-slate-300 text-primary')
+                        "
+                      />
+                    </td>
+                    <td :class="cn('bg-inherit text-center')">
+                      <input
+                        type="checkbox"
+                        v-model="menu.permissions.delete"
+                        :class="
+                          cn('focus:ring-primary size-4 rounded border-slate-300 text-primary')
+                        "
+                      />
+                    </td>
+                    <td :class="cn('bg-inherit text-center')">
+                      <input
+                        type="checkbox"
+                        v-model="menu.permissions.export"
+                        :class="
+                          cn('focus:ring-primary size-4 rounded border-slate-300 text-primary')
+                        "
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 하단 액션 바 (Floating) -->
-      <div
-        :class="
-          cn(
-            'pointer-events-none absolute right-0 bottom-0 left-0 z-20 rounded-b-xl bg-linear-to-t from-white via-white/95 to-transparent p-6 dark:from-slate-900 dark:via-slate-900/95',
-          )
-        "
-      >
-        <div :class="cn('pointer-events-auto flex justify-end gap-3')">
-          <button
-            :class="
-              cn(
-                'rounded-lg border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800',
-              )
-            "
-          >
-            Cancel
-          </button>
-          <button
-            @click="handleSave"
-            :class="
-              cn(
-                'bg-primary hover:bg-primary/90 shadow-primary/20 flex items-center gap-2 rounded-lg px-8 py-2 text-sm font-bold text-white shadow-lg transition-all',
-              )
-            "
-          >
-            <Save :class="cn('size-4')" />
-            <span>Save Changes</span>
-          </button>
+        <!-- 하단 액션 바 (Floating) -->
+        <div
+          :class="
+            cn(
+              'pointer-events-none absolute right-0 bottom-0 left-0 z-20 rounded-b-xl bg-linear-to-t from-white via-white/95 to-transparent p-6 dark:from-slate-900 dark:via-slate-900/95',
+            )
+          "
+        >
+          <div :class="cn('pointer-events-auto flex justify-end gap-3')">
+            <button
+              :class="
+                cn(
+                  'rounded-lg border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800',
+                )
+              "
+            >
+              Cancel
+            </button>
+            <button
+              @click="handleSave"
+              :class="
+                cn(
+                  'bg-primary hover:bg-primary/90 shadow-primary/20 flex items-center gap-2 rounded-lg px-8 py-2 text-sm font-bold text-white shadow-lg transition-all',
+                )
+              "
+            >
+              <Save :class="cn('size-4')" />
+              <span>Save Changes</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-/* 커스텀 스크롤바 등 필요 시 추가 */
-</style>
