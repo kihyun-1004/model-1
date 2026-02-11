@@ -44,8 +44,16 @@ const menuItems: MenuItem[] = [
     icon: Users,
     children: [
       { title: 'All Users', to: '/users' },
-      { title: 'Roles & Permissions', to: '#' },
+      { title: 'Roles & Permissions', to: '/permissions' },
       { title: 'Activity Logs', to: '#' },
+    ],
+  },
+  {
+    title: 'System',
+    icon: Settings,
+    children: [
+      { title: 'Menu Management', to: '/menus' },
+      { title: 'Settings', to: '#' },
     ],
   },
   {
@@ -64,11 +72,6 @@ const menuItems: MenuItem[] = [
  * 하단 시스템 메뉴 데이터
  */
 const systemMenuItems: MenuItem[] = [
-  {
-    title: 'Settings',
-    icon: Settings,
-    to: '#',
-  },
   {
     title: 'Help Center',
     icon: HelpCircle,
