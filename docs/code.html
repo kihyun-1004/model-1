@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Data Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .custom-checkbox {
+            appearance: none;
+            background-color: #fff;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.15em;
+            height: 1.15em;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.25em;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .dark .custom-checkbox {
+            background-color: #1e293b;
+            border-color: #475569;
+        }
+        .custom-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em white;
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        .custom-checkbox:checked {
+            background-color: #137fec;
+            border-color: #137fec;
+        }
+        .custom-checkbox:checked::before {
+            transform: scale(1);
+        }
+        .custom-checkbox:indeterminate {
+            background-color: #137fec;
+            border-color: #137fec;
+        }
+        .custom-checkbox:indeterminate::before {
+            transform: scale(1);
+            clip-path: inset(40% 0 40% 0);
+        }.excel-table {
+            border-collapse: separate; 
+            border-spacing: 0;
+            width: 100%;
+        }
+        .excel-table th {
+            border-right: 1px solid #d1d5db;
+            border-bottom: 1px solid #d1d5db;
+            border-top: 1px solid #d1d5db;
+        }
+        .excel-table th:first-child {
+            border-left: 1px solid #d1d5db;
+        }
+        .dark .excel-table th {
+            border-color: #374151;
+        }
+        .excel-table td {
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .excel-table td:first-child {
+            border-left: 1px solid #e5e7eb;
+        }
+        .dark .excel-table td {
+            border-color: #1f2937;
+        }.excel-table tr:first-child th {
+            border-top: none;}.excel-table thead.sticky th {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }.excel-table tbody tr:hover td {
+            background-color: #f8fafc;
+        }
+        .dark .excel-table tbody tr:hover td {
+            background-color: #1e293b;
+        }#filter-section {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 500px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        #filter-section.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin: 0;
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .transition-transform {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300">
+<div class="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons-round text-white text-xl">layers</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">Nexus</span>
+</div>
+</div>
+<nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto scrollbar-hide">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-round text-xl">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<div>
+<button class="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-primary/10 text-primary transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-icons-round text-xl">group</span>
+<span class="font-medium">Users</span>
+</div>
+<span class="material-icons-round text-lg transform rotate-180">expand_more</span>
+</button>
+<div class="mt-1 ml-9 space-y-1 border-l-2 border-primary/20">
+<a class="block px-4 py-2 text-sm text-primary font-medium hover:text-primary/80" href="#">All Users</a>
+<a class="block px-4 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Roles &amp; Permissions</a>
+<a class="block px-4 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Activity Logs</a>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-round text-xl">analytics</span>
+<span class="font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-round text-xl">inventory_2</span>
+<span class="font-medium">Inventory</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">System</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-round text-xl">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-round text-xl">help_outline</span>
+<span class="font-medium">Help Center</span>
+</a>
+</nav>
+</aside>
+<main class="flex-1 flex flex-col overflow-hidden">
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 flex-shrink-0">
+<div class="flex items-center gap-4 flex-1">
+<button class="p-2 -ml-2 text-slate-500 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-icons-round">menu_open</span>
+</button>
+<div class="max-w-xl w-full">
+<div class="relative">
+<span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-lg text-sm transition-all" placeholder="Search data, users, or reports..." type="text"/>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-icons-round">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-icons-round">dark_mode</span>
+</button>
+</div>
+</header>
+<div class="flex-1 flex flex-col min-h-0 bg-background-light dark:bg-background-dark">
+<div class="p-8 pb-0 flex-shrink-0">
+<div class="mb-6">
+<nav class="flex text-sm text-slate-500 mb-2">
+<a class="hover:text-primary" href="#">Dashboard</a>
+<span class="mx-2 text-slate-300">/</span>
+<a class="hover:text-primary" href="#">Users</a>
+<span class="mx-2 text-slate-300">/</span>
+<span class="text-slate-900 dark:text-white font-medium">All Users</span>
+</nav>
+<div class="flex items-center justify-between">
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">User Management</h1>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-sm">
+<span class="material-icons-round text-lg">add</span>
+<span>Add New User</span>
+</button>
+</div>
+</div>
+<div class="mb-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+<h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+<span class="material-icons-round text-base text-primary">filter_alt</span>
+                                Filters
+                            </h2>
+<button class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-1 text-sm font-medium focus:outline-none" onclick="document.getElementById('filter-section').classList.toggle('collapsed'); this.querySelector('.arrow-icon').classList.toggle('rotate-180');">
+<span>Toggle Filters</span>
+<span class="material-icons-round text-base arrow-icon transition-transform">keyboard_arrow_up</span>
+</button>
+</div>
+<div class="p-4" id="filter-section">
+<div class="flex flex-col md:flex-row items-end gap-4 w-full">
+<div class="flex flex-col w-full md:w-64 gap-1.5">
+<label class="text-xs font-bold text-slate-700 dark:text-slate-300 ml-1">Search</label>
+<div class="relative w-full">
+<span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-sm transition-all shadow-sm" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex flex-col w-full md:w-48 gap-1.5">
+<label class="text-xs font-bold text-slate-700 dark:text-slate-300 ml-1">Date Range</label>
+<div class="relative w-full">
+<span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">calendar_today</span>
+<input class="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-sm transition-all shadow-sm cursor-pointer" placeholder="Select Range" type="text"/>
+</div>
+</div>
+<div class="flex flex-col w-full md:w-40 gap-1.5">
+<label class="text-xs font-bold text-slate-700 dark:text-slate-300 ml-1">Status</label>
+<div class="relative w-full">
+<select class="w-full pl-3 pr-10 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-sm transition-all shadow-sm appearance-none cursor-pointer">
+<option value="">All Status</option>
+<option value="active">Active</option>
+<option value="pending">Pending</option>
+<option value="completed">Completed</option>
+</select>
+<span class="material-icons-round absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<div class="ml-auto flex items-center gap-2">
+<button class="p-2 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg transition-colors shadow-sm" title="Refresh">
+<span class="material-icons-round text-xl">refresh</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
+<span class="material-icons-round text-lg">filter_list</span>
+                                        Filter
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-4 p-4 bg-primary/5 border border-primary/20 rounded-xl flex items-center justify-between animate-fade-in-down" id="bulk-actions">
+<div class="flex items-center gap-3">
+<span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white text-sm font-bold">2</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">items selected</span>
+<div class="h-4 w-[1px] bg-slate-300 dark:bg-slate-700 mx-2"></div>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 rounded-lg border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all">
+<span class="material-icons-round text-base">file_download</span>
+                                Export
+                            </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 rounded-lg border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all">
+<span class="material-icons-round text-base">cached</span>
+                                Change Status
+                            </button>
+</div>
+<div>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+<span class="material-icons-round text-base">delete</span>
+                                Delete Selected
+                            </button>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-hidden px-8 pb-4 flex flex-col min-h-0">
+<div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-sm flex flex-col h-full rounded-xl overflow-hidden">
+<div class="overflow-y-auto flex-1">
+<table class="w-full text-left border-collapse excel-table font-mono text-sm">
+<thead class="sticky top-0 z-20 bg-slate-100 dark:bg-slate-800">
+<tr>
+<th class="px-3 py-2 w-10 text-center bg-slate-200/60 dark:bg-slate-800">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</th>
+<th class="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider bg-slate-200/60 dark:bg-slate-800">
+<div class="flex items-center justify-between gap-1 cursor-pointer hover:text-primary">
+                                                ID
+                                                <span class="material-icons-round text-xs opacity-50">unfold_more</span>
+</div>
+</th>
+<th class="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider bg-slate-200/60 dark:bg-slate-800">
+<div class="flex items-center justify-between gap-1 cursor-pointer hover:text-primary">
+                                                Name
+                                                <span class="material-icons-round text-xs opacity-50">unfold_more</span>
+</div>
+</th>
+<th class="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider bg-slate-200/60 dark:bg-slate-800">
+<div class="flex items-center justify-between gap-1 cursor-pointer hover:text-primary">
+                                                Role
+                                                <span class="material-icons-round text-xs opacity-50">unfold_more</span>
+</div>
+</th>
+<th class="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider bg-slate-200/60 dark:bg-slate-800">
+<div class="flex items-center justify-between gap-1 cursor-pointer hover:text-primary">
+                                                Status
+                                                <span class="material-icons-round text-xs opacity-50">unfold_more</span>
+</div>
+</th>
+<th class="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider bg-slate-200/60 dark:bg-slate-800">
+<div class="flex items-center justify-between gap-1 cursor-pointer hover:text-primary">
+                                                Last Active
+                                                <span class="material-icons-round text-xs opacity-50">unfold_more</span>
+</div>
+</th>
+<th class="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider text-right bg-slate-200/60 dark:bg-slate-800">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-300 dark:divide-slate-700 bg-white dark:bg-slate-900">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center bg-primary/5">
+<input checked="" class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500 bg-primary/5">#USR-2941</td>
+<td class="px-3 py-2 bg-primary/5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-primary font-bold text-[10px] border border-blue-200">JS</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Jordan Smith</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400 bg-primary/5">Editor</td>
+<td class="px-3 py-2 bg-primary/5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs bg-primary/5">2 mins ago</td>
+<td class="px-3 py-2 text-right bg-primary/5">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center bg-primary/5">
+<input checked="" class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500 bg-primary/5">#USR-3012</td>
+<td class="px-3 py-2 bg-primary/5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-[10px] border border-slate-200">ER</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Elena Rodriguez</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400 bg-primary/5">Viewer</td>
+<td class="px-3 py-2 bg-primary/5">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                                                INACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs bg-primary/5">1 day ago</td>
+<td class="px-3 py-2 text-right bg-primary/5">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3045</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-[10px] border border-purple-200">MK</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Marcus Kim</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Admin</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">5 mins ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3120</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-[10px] border border-orange-200">SL</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Sarah Lee</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Editor</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">10 mins ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3156</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold text-[10px] border border-teal-200">RJ</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Robert Jones</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Viewer</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
+                                                PENDING
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">2 hours ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3201</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-[10px] border border-indigo-200">AM</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Alice Miller</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Admin</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                                                INACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">3 days ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3245</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-[10px] border border-red-200">DW</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">David Wilson</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Editor</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">4 hours ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3298</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600 font-bold text-[10px] border border-cyan-200">EP</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Emma Parker</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Viewer</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">1 hour ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3342</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold text-[10px] border border-pink-200">TC</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Thomas Clark</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Editor</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
+                                                PENDING
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">5 hours ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3401</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-lime-100 flex items-center justify-center text-lime-600 font-bold text-[10px] border border-lime-200">LB</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Linda Brown</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Viewer</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">12 mins ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3450</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-[10px] border border-gray-200">KJ</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Kevin Johnson</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Admin</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                                                INACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">2 weeks ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+<td class="px-3 py-2 text-center">
+<input class="custom-checkbox border-slate-400 text-primary focus:ring-primary rounded-sm h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-3 py-2 text-slate-500">#USR-3499</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold text-[10px] border border-amber-200">MH</div>
+<div class="flex flex-col">
+<span class="font-medium text-slate-900 dark:text-white leading-tight">Maria Hernandez</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2 text-slate-600 dark:text-slate-400">Viewer</td>
+<td class="px-3 py-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                                ACTIVE
+                                            </span>
+</td>
+<td class="px-3 py-2 text-slate-500 text-xs">15 mins ago</td>
+<td class="px-3 py-2 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors hover:bg-slate-200 rounded">
+<span class="material-icons-round text-base">edit</span>
+</button>
+<button class="p-1 text-slate-400 hover:text-red-500 transition-colors hover:bg-red-50 rounded">
+<span class="material-icons-round text-base">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between sticky bottom-0 z-10">
+<p class="text-sm text-slate-500">Showing 1 to 12 of 120 results</p>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 transition-colors disabled:opacity-50">
+<span class="material-icons-round">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded-lg bg-primary text-white text-sm font-medium">1</button>
+<button class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-white dark:hover:bg-slate-700 transition-colors">2</button>
+<button class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-white dark:hover:bg-slate-700 transition-colors">3</button>
+<button class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-white dark:hover:bg-slate-700 transition-colors">...</button>
+<button class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-white dark:hover:bg-slate-700 transition-colors">10</button>
+<button class="p-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 transition-colors">
+<span class="material-icons-round">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
