@@ -50,7 +50,7 @@ export function useTheme() {
     // (CSS transition-duration과 일치해야 함)
     setTimeout(() => {
       document.documentElement.classList.remove('theme-transition');
-    }, 300);
+    }, 500);
   };
 
   return {

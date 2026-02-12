@@ -28,15 +28,15 @@ defineEmits<{
 // 변형별 스타일 매핑
 const variantClasses = computed(() => {
   const map: Record<string, string> = {
-    primary: 'bg-primary hover:bg-primary/90 text-white shadow-sm',
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm',
     secondary:
-      'bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white shadow-sm',
+      'bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm',
     ghost:
-      'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700',
-    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-sm',
-    icon: 'text-slate-400 hover:text-primary hover:bg-slate-200 dark:hover:bg-slate-700 rounded',
+      'hover:bg-accent hover:text-accent-foreground',
+    danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
+    icon: 'hover:bg-accent hover:text-accent-foreground rounded',
     outline:
-      'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm',
+      'border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground',
   };
   return map[props.variant] || map.primary;
 });

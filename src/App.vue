@@ -14,7 +14,7 @@ onMounted(() => {
   <div
     :class="
       cn(
-        'bg-background-light dark:bg-background-dark min-h-screen font-sans text-slate-900 antialiased dark:text-slate-50',
+        'bg-background min-h-screen font-sans text-foreground antialiased',
       )
     "
   >

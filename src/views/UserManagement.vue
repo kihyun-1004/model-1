@@ -4,12 +4,10 @@ import { cn } from '@/lib/utils';
 import { createColumnHelper, type ColumnDef } from '@tanstack/vue-table';
 import {
   Plus,
-  Search,
   Pencil,
   Trash2,
   Download,
   ArrowUpDown,
-  RotateCw,
 } from 'lucide-vue-next';
 
 // 컴포넌트 import
@@ -17,42 +15,15 @@ import AppDataTable from '@/components/AppDataTable.vue';
 import AppButton from '@/components/ui/AppButton.vue';
 import AppBadge from '@/components/ui/AppBadge.vue';
 import AppAvatar from '@/components/ui/AppAvatar.vue';
-import AppInput from '@/components/ui/AppInput.vue';
-import AppDateRangePicker from '@/components/ui/AppDateRangePicker.vue';
-import AppSelect from '@/components/ui/AppSelect.vue';
 import AppBreadcrumb from '@/components/ui/AppBreadcrumb.vue';
 import type { BreadcrumbItem } from '@/components/ui/AppBreadcrumb.vue';
 import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import AppPagination from '@/components/ui/AppPagination.vue';
-import AppFilterPanel from '@/components/ui/AppFilterPanel.vue';
 import AppBulkActionBar from '@/components/ui/AppBulkActionBar.vue';
+import UserFilterPanel from '@/components/users/UserFilterPanel.vue';
 
-// ===== 타입 정의 (Mock Data용) =====
-type UserStatus = 'active' | 'inactive' | 'pending';
-
-type AvatarColor =
-  | 'blue'
-  | 'slate'
-  | 'purple'
-  | 'orange'
-  | 'teal'
-  | 'indigo'
-  | 'red'
-  | 'cyan'
-  | 'pink'
-  | 'lime'
-  | 'gray'
-  | 'amber';
-
-interface User {
-  id: string;
-  name: string;
-  initials: string;
-  avatarColor: AvatarColor;
-  role: string;
-  status: UserStatus;
-  lastActive: string;
-}
+import type { User, UserStatus } from '@/types/user';
+import { users } from '@/data/users';
 
 // ===== 브레드크럼 데이터 =====
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -170,117 +141,7 @@ const columns: ColumnDef<User, any>[] = [
   }),
 ];
 
-// ===== 샘플 데이터 (퍼블리싱 원본과 동일) =====
-const users: User[] = [
-  {
-    id: '#USR-2941',
-    name: 'Jordan Smith',
-    initials: 'JS',
-    avatarColor: 'blue',
-    role: 'Editor',
-    status: 'active',
-    lastActive: '2 mins ago',
-  },
-  {
-    id: '#USR-3012',
-    name: 'Elena Rodriguez',
-    initials: 'ER',
-    avatarColor: 'slate',
-    role: 'Viewer',
-    status: 'inactive',
-    lastActive: '1 day ago',
-  },
-  {
-    id: '#USR-3045',
-    name: 'Marcus Kim',
-    initials: 'MK',
-    avatarColor: 'purple',
-    role: 'Admin',
-    status: 'active',
-    lastActive: '5 mins ago',
-  },
-  {
-    id: '#USR-3120',
-    name: 'Sarah Lee',
-    initials: 'SL',
-    avatarColor: 'orange',
-    role: 'Editor',
-    status: 'active',
-    lastActive: '10 mins ago',
-  },
-  {
-    id: '#USR-3156',
-    name: 'Robert Jones',
-    initials: 'RJ',
-    avatarColor: 'teal',
-    role: 'Viewer',
-    status: 'pending',
-    lastActive: '2 hours ago',
-  },
-  {
-    id: '#USR-3201',
-    name: 'Alice Miller',
-    initials: 'AM',
-    avatarColor: 'indigo',
-    role: 'Admin',
-    status: 'inactive',
-    lastActive: '3 days ago',
-  },
-  {
-    id: '#USR-3245',
-    name: 'David Wilson',
-    initials: 'DW',
-    avatarColor: 'red',
-    role: 'Editor',
-    status: 'active',
-    lastActive: '4 hours ago',
-  },
-  {
-    id: '#USR-3298',
-    name: 'Emma Parker',
-    initials: 'EP',
-    avatarColor: 'cyan',
-    role: 'Viewer',
-    status: 'active',
-    lastActive: '1 hour ago',
-  },
-  {
-    id: '#USR-3342',
-    name: 'Thomas Clark',
-    initials: 'TC',
-    avatarColor: 'pink',
-    role: 'Editor',
-    status: 'pending',
-    lastActive: '5 hours ago',
-  },
-  {
-    id: '#USR-3401',
-    name: 'Linda Brown',
-    initials: 'LB',
-    avatarColor: 'lime',
-    role: 'Viewer',
-    status: 'active',
-    lastActive: '12 mins ago',
-  },
-  {
-    id: '#USR-3450',
-    name: 'Kevin Johnson',
-    initials: 'KJ',
-    avatarColor: 'gray',
-    role: 'Admin',
-    status: 'inactive',
-    lastActive: '2 weeks ago',
-  },
-  {
-    id: '#USR-3499',
-    name: 'Maria Hernandez',
-    initials: 'MH',
-    avatarColor: 'amber',
-    role: 'Viewer',
-    status: 'active',
-    lastActive: '15 mins ago',
-  },
-];
+
 
 // ===== 필터링된 데이터 (Computed) =====
 const filteredUsers = computed(() => {
@@ -338,43 +199,14 @@ const filteredUsers = computed(() => {
       </AppPageHeader>
 
       <!-- 필터 패널 -->
-      <div :class="cn('mb-6')">
-        <AppFilterPanel>
-          <div :class="cn('flex w-full flex-col items-end gap-4 md:flex-row')">
-            <!-- 검색 입력 -->
-            <div :class="cn('flex w-full flex-col gap-1.5 md:w-64')">
-              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
-                Search
-              </label>
-              <AppInput v-model="searchValue" placeholder="Search..." :icon="Search" />
-            </div>
-            <!-- 날짜 필터 (Mock) -->
-            <div :class="cn('flex w-full flex-col gap-1.5 md:w-72')">
-              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
-                Date Range
-              </label>
-              <AppDateRangePicker v-model="dateValue" />
-            </div>
-            <!-- 상태 필터 -->
-            <div :class="cn('flex w-full flex-col gap-1.5 md:w-40')">
-              <label :class="cn('ml-1 text-xs font-bold text-slate-700 dark:text-slate-300')">
-                Status
-              </label>
-              <AppSelect v-model="statusFilter" :options="statusOptions" placeholder="All Status" />
-            </div>
-
-            <!-- 우측 아이콘 버튼 그룹 (Refresh, Search) -->
-            <div :class="cn('ml-auto flex items-center gap-1 pb-1')">
-              <AppButton variant="primary" size="icon" class="h-11 w-11" title="Search">
-                <Search :class="cn('size-7')" />
-              </AppButton>
-              <AppButton variant="primary" size="icon" class="h-11 w-11" title="Refresh">
-                <RotateCw :class="cn('size-7')" />
-              </AppButton>
-            </div>
-          </div>
-        </AppFilterPanel>
-      </div>
+      <UserFilterPanel
+        v-model:search-value="searchValue"
+        v-model:date-value="dateValue"
+        v-model:status-filter="statusFilter"
+        :status-options="statusOptions"
+        @search="() => {}"
+        @refresh="() => {}"
+      />
 
       <!-- 벌크 액션 바 (행 선택 시 활성화) -->
       <div :class="cn('mb-4')">

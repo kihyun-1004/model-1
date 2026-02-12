@@ -17,13 +17,13 @@ const props = withDefaults(
 const variantClasses = computed(() => {
   const map: Record<string, string> = {
     success:
-      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800',
+      'bg-success text-success-foreground border-transparent',
     default:
-      'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700',
+      'bg-secondary text-secondary-foreground border-transparent',
     warning:
-      'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800',
+      'bg-warning text-warning-foreground border-transparent',
     outline:
-      'bg-transparent border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400',
+      'text-foreground border-border',
   };
   return map[props.variant] || map.default;
 });

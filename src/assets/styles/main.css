@@ -5,16 +5,130 @@
 
 @import 'tailwindcss';
 
-/* 디자인 토큰 */
+/* 디자인 토큰 및 시멘틱 컬러 시스템 */
 @theme {
-  --color-primary: #137fec;
-  --color-background-light: #f6f7f8;
-  --color-background-dark: #101922;
-  --font-sans:
-    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
-    'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
+  /* 폰트 */
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* 시멘틱 컬러 매핑 */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* 차트 색상 (필요시) */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+/* CSS 변수 정의 (Light/Dark) */
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a; /* slate-950 */
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --primary: #2563eb; /* blue-600 */
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9; /* slate-100 */
+  --secondary-foreground: #0f172a;
+
+  --muted: #f1f5f9; /* slate-100 */
+  --muted-foreground: #64748b; /* slate-500 */
+
+  --accent: #f1f5f9; /* slate-100 */
+  --accent-foreground: #0f172a;
+
+  --destructive: #ef4444; /* red-500 */
+  --destructive-foreground: #ffffff;
+
+  --success: #22c55e; /* green-500 */
+  --success-foreground: #ffffff;
+
+  --warning: #f59e0b; /* amber-500 */
+  --warning-foreground: #ffffff;
+
+  --border: #e2e8f0; /* slate-200 */
+  --input: #e2e8f0; /* slate-200 */
+  --ring: #2563eb; /* blue-600 */
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: #020617; /* slate-950 */
+  --foreground: #f8fafc; /* slate-50 */
+
+  --card: #0f172a; /* slate-900 */
+  --card-foreground: #f8fafc;
+
+  --popover: #0f172a;
+  --popover-foreground: #f8fafc;
+
+  --primary: #3b82f6; /* blue-500 */
+  --primary-foreground: #ffffff;
+
+  --secondary: #1e293b; /* slate-800 */
+  --secondary-foreground: #f8fafc;
+
+  --muted: #1e293b; /* slate-800 */
+  --muted-foreground: #94a3b8; /* slate-400 */
+
+  --accent: #1e293b; /* slate-800 */
+  --accent-foreground: #f8fafc;
+
+  --destructive: #7f1d1d; /* red-900 */
+  --destructive-foreground: #f8fafc;
+
+  --success: #14532d; /* green-900 */
+  --success-foreground: #f8fafc;
+
+  --warning: #78350f; /* amber-900 */
+  --warning-foreground: #f8fafc;
+
+  --border: #1e293b; /* slate-800 */
+  --input: #1e293b; /* slate-800 */
+  --ring: #3b82f6; /* blue-500 */
 }
 
 /* 다크모드 수동 토글 지원 (Class Strategy) */
@@ -25,30 +139,37 @@
   color-scheme: dark;
 }
 
+/* 기본 바디 스타일: 변수 적용 */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
 /* 테마 전환 애니메이션 (JS로 클래스 제어) */
 .theme-transition,
 .theme-transition *,
 .theme-transition *::before,
 .theme-transition *::after {
   transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease,
-    fill 0.3s ease,
-    stroke 0.3s ease !important;
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease,
+    fill 0.5s ease,
+    stroke 0.5s ease !important;
   transition-delay: 0s !important;
 }
 
 /* 커스텀 체크박스 */
 .custom-checkbox {
   appearance: none;
-  background-color: #fff;
+  background-color: var(--background);
   margin: 0;
   font: inherit;
   color: currentColor;
   width: 1.15em;
   height: 1.15em;
-  border: 2px solid #cbd5e1;
+  border: 2px solid var(--border);
   border-radius: 0.25em;
   display: grid;
   place-content: center;
@@ -57,8 +178,8 @@
 }
 
 .dark .custom-checkbox {
-  background-color: #1e293b;
-  border-color: #475569;
+  background-color: var(--secondary);
+  border-color: var(--border);
 }
 
 .custom-checkbox::before {
@@ -73,8 +194,8 @@
 }
 
 .custom-checkbox:checked {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .custom-checkbox:checked::before {
@@ -82,8 +203,8 @@
 }
 
 .custom-checkbox:indeterminate {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .custom-checkbox:indeterminate::before {
@@ -98,30 +219,21 @@
 }
 
 .excel-table th {
-  border-bottom: 2px solid #cbd5e1; /* slate-300: 헤더 구분 강조 */
-  border-right: 1px solid #e2e8f0; /* slate-200: 세로선 부활 (연하게) */
+  border-bottom: 2px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 .excel-table th:last-child {
   border-right: none;
 }
 
-.dark .excel-table th {
-  border-bottom-color: #475569; /* slate-600 */
-  border-right-color: #334155; /* slate-700 */
-}
-
 .excel-table td {
-  border-bottom: 1px solid #e2e8f0; /* slate-200: 행 구분 명확화 */
-  border-right: 1px solid #e2e8f0; /* slate-200: 셀 구분 명확화 */
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 .excel-table td:last-child {
   border-right: none;
-}
-
-.dark .excel-table td {
-  border-color: #334155; /* slate-700 */
 }
 
 /* 헤더 상단 보더 제거 불필요 */
@@ -133,11 +245,7 @@
 }
 
 .excel-table tbody tr:hover td {
-  background-color: #f8fafc;
-}
-
-.dark .excel-table tbody tr:hover td {
-  background-color: #1e293b;
+  background-color: var(--muted);
 }
 
 /* 스크롤바 숨김 유틸리티 */

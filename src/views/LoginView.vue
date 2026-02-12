@@ -32,14 +32,14 @@ const handleLogin = (e: Event) => {
   <div
     :class="
       cn(
-        'bg-background-light dark:bg-background-dark flex min-h-screen items-center justify-center p-4 font-sans',
+        'bg-background flex min-h-screen items-center justify-center p-4 font-sans',
       )
     "
   >
     <div
       :class="
         cn(
-          'grid w-full max-w-[1200px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl md:grid-cols-2 dark:border-slate-800 dark:bg-slate-900',
+          'grid w-full max-w-[1200px] overflow-hidden rounded-2xl border border-border bg-card shadow-xl md:grid-cols-2',
         )
       "
     >
@@ -75,13 +75,13 @@ const handleLogin = (e: Event) => {
             >
               <Layers :class="cn('text-primary size-6')" />
             </div>
-            <span :class="cn('text-2xl font-bold tracking-tight text-white')">Nexus</span>
+            <span :class="cn('text-2xl font-bold tracking-tight text-primary-foreground')">Nexus</span>
           </div>
         </div>
 
         <!-- Main Text -->
         <div :class="cn('relative z-10')">
-          <h2 :class="cn('mb-6 text-4xl leading-tight font-bold text-white')">
+          <h2 :class="cn('mb-6 text-4xl leading-tight font-bold text-primary-foreground')">
             Centralized Admin Control & Data Insights
           </h2>
           <p :class="cn('text-lg text-blue-100')">
@@ -108,17 +108,17 @@ const handleLogin = (e: Event) => {
           <div :class="cn('bg-primary flex h-8 w-8 items-center justify-center rounded-lg')">
             <Layers :class="cn('size-5 text-white')" />
           </div>
-          <span :class="cn('text-xl font-bold tracking-tight text-slate-800 dark:text-white')"
+          <span :class="cn('text-xl font-bold tracking-tight text-foreground')"
             >Nexus</span
           >
         </div>
 
         <!-- Form Header -->
         <div :class="cn('mb-8')">
-          <h1 :class="cn('mb-2 text-3xl font-bold text-slate-900 dark:text-white')">
+          <h1 :class="cn('mb-2 text-3xl font-bold text-foreground')">
             Welcome Back
           </h1>
-          <p :class="cn('text-slate-500 dark:text-slate-400')">
+          <p :class="cn('text-muted-foreground')">
             Please sign in to access your admin account.
           </p>
         </div>
@@ -128,7 +128,7 @@ const handleLogin = (e: Event) => {
           <!-- Username Input -->
           <div :class="cn('space-y-1.5')">
             <label
-              :class="cn('ml-1 text-sm font-semibold text-slate-700 dark:text-slate-300')"
+              :class="cn('ml-1 text-sm font-semibold text-foreground')"
               for="username"
               >Username</label
             >
@@ -144,7 +144,7 @@ const handleLogin = (e: Event) => {
           <div :class="cn('space-y-1.5')">
             <div :class="cn('flex items-center justify-between')">
               <label
-                :class="cn('ml-1 text-sm font-semibold text-slate-700 dark:text-slate-300')"
+                :class="cn('ml-1 text-sm font-semibold text-foreground')"
                 for="password"
                 >Password</label
               >
@@ -168,7 +168,7 @@ const handleLogin = (e: Event) => {
                   type="button"
                   :class="
                     cn(
-                      'text-slate-400 hover:text-slate-600 focus:outline-hidden dark:hover:text-slate-200',
+                      'text-muted-foreground hover:text-foreground focus:outline-hidden',
                     )
                   "
                   @click="showPassword = !showPassword"
@@ -187,7 +187,7 @@ const handleLogin = (e: Event) => {
               <span
                 :class="
                   cn(
-                    'text-sm text-slate-600 transition-colors group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-slate-200',
+                    'text-sm text-muted-foreground transition-colors group-hover:text-foreground',
                   )
                 "
                 >Remember Me</span
@@ -206,8 +206,8 @@ const handleLogin = (e: Event) => {
         </form>
 
         <!-- Sign Up Link -->
-        <div :class="cn('mt-8 border-t border-slate-100 pt-8 text-center dark:border-slate-800')">
-          <p :class="cn('text-sm text-slate-500 dark:text-slate-400')">
+        <div :class="cn('mt-8 border-t border-border pt-8 text-center')">
+          <p :class="cn('text-sm text-muted-foreground')">
             New on our platform?
             <a :class="cn('text-primary font-semibold hover:underline')" href="#">Request Access</a>
           </p>
